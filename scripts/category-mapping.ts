@@ -1,0 +1,18 @@
+export const CATEGORY_MAPPING: Record<string, { id: string; name: string; icon: string }> = {
+  '2-哈希': { id: 'hash', name: '哈希', icon: 'Hash' },
+  '3-双指针': { id: 'two-pointers', name: '双指针', icon: 'GitBranch' },
+  '4-滑动窗口': { id: 'sliding-window', name: '滑动窗口', icon: 'Scan' },
+  '5-普通数组': { id: 'array', name: '普通数组', icon: 'Brackets' },
+  '6-矩阵': { id: 'matrix', name: '矩阵', icon: 'Grid3x3' },
+  '7-链表': { id: 'linked-list', name: '链表', icon: 'Link2' },
+  '8-二叉树': { id: 'binary-tree', name: '二叉树', icon: 'BinaryTree' },
+  '9-图论': { id: 'graph', name: '图论', icon: 'Network' },
+  '10-回溯': { id: 'backtracking', name: '回溯', icon: 'RotateCcw' },
+  '11-二分查找': { id: 'binary-search', name: '二分查找', icon: 'Search' },
+  '12-栈': { id: 'stack', name: '栈', icon: 'Layers' },
+  '13-堆': { id: 'heap', name: '堆', icon: 'Triangle' },
+  '14-贪心算法': { id: 'greedy', name: '贪心算法', icon: 'Target' },
+  '15-动态规划': { id: 'dynamic-programming', name: '动态规划', icon: 'Table' },
+  '16-多维动态规划': { id: 'multi-dp', name: '多维动态规划', icon: 'Table2' },
+  '17-技巧': { id: 'tricks', name: '技巧', icon: 'Lightbulb' },
+};

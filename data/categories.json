@@ -1,0 +1,146 @@
+[
+  {
+    "id": "backtracking",
+    "name": "回溯",
+    "slug": "backtracking",
+    "order": 10,
+    "problemCount": 8,
+    "description": "回溯相关算法题目",
+    "icon": "RotateCcw"
+  },
+  {
+    "id": "binary-search",
+    "name": "二分查找",
+    "slug": "binary-search",
+    "order": 11,
+    "problemCount": 6,
+    "description": "二分查找相关算法题目",
+    "icon": "Search"
+  },
+  {
+    "id": "stack",
+    "name": "栈",
+    "slug": "stack",
+    "order": 12,
+    "problemCount": 5,
+    "description": "栈相关算法题目",
+    "icon": "Layers"
+  },
+  {
+    "id": "heap",
+    "name": "堆",
+    "slug": "heap",
+    "order": 13,
+    "problemCount": 3,
+    "description": "堆相关算法题目",
+    "icon": "Triangle"
+  },
+  {
+    "id": "greedy",
+    "name": "贪心算法",
+    "slug": "greedy",
+    "order": 14,
+    "problemCount": 4,
+    "description": "贪心算法相关算法题目",
+    "icon": "Target"
+  },
+  {
+    "id": "dynamic-programming",
+    "name": "动态规划",
+    "slug": "dynamic-programming",
+    "order": 15,
+    "problemCount": 10,
+    "description": "动态规划相关算法题目",
+    "icon": "Table"
+  },
+  {
+    "id": "multi-dp",
+    "name": "多维动态规划",
+    "slug": "multi-dp",
+    "order": 16,
+    "problemCount": 5,
+    "description": "多维动态规划相关算法题目",
+    "icon": "Table2"
+  },
+  {
+    "id": "tricks",
+    "name": "技巧",
+    "slug": "tricks",
+    "order": 17,
+    "problemCount": 5,
+    "description": "技巧相关算法题目",
+    "icon": "Lightbulb"
+  },
+  {
+    "id": "hash",
+    "name": "哈希",
+    "slug": "hash",
+    "order": 2,
+    "problemCount": 3,
+    "description": "哈希相关算法题目",
+    "icon": "Hash"
+  },
+  {
+    "id": "two-pointers",
+    "name": "双指针",
+    "slug": "two-pointers",
+    "order": 3,
+    "problemCount": 4,
+    "description": "双指针相关算法题目",
+    "icon": "GitBranch"
+  },
+  {
+    "id": "sliding-window",
+    "name": "滑动窗口",
+    "slug": "sliding-window",
+    "order": 4,
+    "problemCount": 5,
+    "description": "滑动窗口相关算法题目",
+    "icon": "Scan"
+  },
+  {
+    "id": "array",
+    "name": "普通数组",
+    "slug": "array",
+    "order": 5,
+    "problemCount": 5,
+    "description": "普通数组相关算法题目",
+    "icon": "Brackets"
+  },
+  {
+    "id": "matrix",
+    "name": "矩阵",
+    "slug": "matrix",
+    "order": 6,
+    "problemCount": 4,
+    "description": "矩阵相关算法题目",
+    "icon": "Grid3x3"
+  },
+  {
+    "id": "linked-list",
+    "name": "链表",
+    "slug": "linked-list",
+    "order": 7,
+    "problemCount": 14,
+    "description": "链表相关算法题目",
+    "icon": "Link2"
+  },
+  {
+    "id": "binary-tree",
+    "name": "二叉树",
+    "slug": "binary-tree",
+    "order": 8,
+    "problemCount": 15,
+    "description": "二叉树相关算法题目",
+    "icon": "BinaryTree"
+  },
+  {
+    "id": "graph",
+    "name": "图论",
+    "slug": "graph",
+    "order": 9,
+    "problemCount": 4,
+    "description": "图论相关算法题目",
+    "icon": "Network"
+  }
+]
