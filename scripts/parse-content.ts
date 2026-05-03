@@ -4,52 +4,101 @@ import { Category, Problem, Solution, CodeBlock } from '../src/lib/data/types';
 import { CATEGORY_MAPPING } from './category-mapping';
 
 // Resolve the content directory relative to this script file
-// Scripts are in leetcode-hot100-viz/scripts/
-// Content directories are now in docs/original-content/
 const SCRIPT_DIR = __dirname;
-const PROJECT_ROOT = path.resolve(SCRIPT_DIR, '..'); // leetcode-hot100-viz/
+const PROJECT_ROOT = path.resolve(SCRIPT_DIR, '..');
 const CONTENT_DIR = path.resolve(PROJECT_ROOT, 'docs/original-content');
 const OUTPUT_DIR = path.resolve(PROJECT_ROOT, 'data');
 
 function extractTitle(content: string): string {
-  // Match first H1 heading, strip any emoji or special characters
   const match = content.match(/^# (.+)$/m);
   if (!match) return '';
   const title = match[1].trim();
-  // Remove common prefixes and strip emojis
   return title
     .replace(/^【[^】]+】\s*/, '')
-    .replace(/[｜|].*$/, '')  // Remove subtitle after |
+    .replace(/[｜|].*$/, '')
     .trim();
 }
 
-function extractLifeScenario(content: string): string {
-  // Match "生活中的算法" or sections starting with life analogies (emoji headers)
-  const patterns = [
-    /## 生活中的算法\n([\s\S]*?)(?=\n## |$)/,
-    /## 🧩.*?\n([\s\S]*?)(?=\n## |$)/,
-    /## 💡 问题的本质\n([\s\S]*?)(?=\n## |$)/,
-  ];
+function extractSection(content: string, sectionNames: string[]): string {
+  for (const name of sectionNames) {
+    // Match section with emoji or without
+    const patterns = [
+      new RegExp(`## ${name}[\\s\\S]*?(?=\\n## |$)`, 'i'),
+      new RegExp(`## [\\p{Emoji_Presentation}\\p{Emoji}\\u{1F300}-\\u{1F9FF}]*\\s*${name}[\\s\\S]*?(?=\\n## |$)`, 'iu'),
+    ];
 
-  for (const pattern of patterns) {
-    const match = content.match(pattern);
-    if (match) return match[1].trim();
+    for (const pattern of patterns) {
+      const match = content.match(pattern);
+      if (match) {
+        // Extract content after the heading
+        const lines = match[0].split('\n');
+        const sectionContent = lines.slice(1).join('\n').trim();
+        if (sectionContent) return sectionContent;
+      }
+    }
   }
   return '';
 }
 
-function extractDescription(content: string): string {
-  // Match "问题描述" or problem description sections
-  const patterns = [
-    /## 问题描述\n([\s\S]*?)(?=\n## |$)/,
-    /## 💡 问题的本质\n([\s\S]*?)(?=\n## |$)/,
-  ];
+function extractLifeScenario(content: string): string {
+  return extractSection(content, [
+    '从日出日落说起',
+    '生活中的算法',
+    '生活场景',
+    '购物找零',
+    '开门见山',
+  ]);
+}
 
-  for (const pattern of patterns) {
-    const match = content.match(pattern);
-    if (match) return match[1].trim();
-  }
-  return '';
+function extractDescription(content: string): string {
+  return extractSection(content, [
+    '问题解析',
+    '问题描述',
+    '问题的本质',
+  ]);
+}
+
+function extractThoughtProcess(content: string): string {
+  return extractSection(content, [
+    '思路发展历程',
+    '思路历程',
+    '解题思路',
+    '思路',
+  ]);
+}
+
+function extractCodeExplanation(content: string): string {
+  return extractSection(content, [
+    '代码详解',
+    '代码解析',
+    '代码说明',
+  ]);
+}
+
+function extractPitfalls(content: string): string {
+  return extractSection(content, [
+    '易错点剖析',
+    '易错点',
+    '注意事项',
+    '坑点',
+  ]);
+}
+
+function extractExtensions(content: string): string {
+  return extractSection(content, [
+    '举一反三',
+    '拓展',
+    '延伸',
+    '进阶',
+  ]);
+}
+
+function extractTips(content: string): string {
+  return extractSection(content, [
+    '面试技巧',
+    '面试要点',
+    '面试',
+  ]);
 }
 
 function extractCodeBlocks(content: string): CodeBlock[] {
@@ -68,21 +117,26 @@ function extractCodeBlocks(content: string): CodeBlock[] {
 function extractSolutions(content: string): Solution[] {
   const solutions: Solution[] = [];
 
-  // Match various solution section patterns
-  // Pattern 1: "最直观的解法" or "暴力解法" or "⚡ 代码实现" with solution type
-  const brutePatterns = [
-    /## (?:最直观的解法|暴力解法)[：:\n]([\s\S]*?)(?=\n## |$)/,
-    /## ⚡ 代码实现[：:\n]([\s\S]*?)(?=\n## |$)/,
+  // Pattern 1: "优雅的解决方案" or "解决方案"
+  const solutionPatterns = [
+    /## [\p{Emoji_Presentation}\p{Emoji}\u{1F300}-\u{1F9FF}]*\s*优雅的解决方案[\s\S]*?(?=\n## |$)/iu,
+    /## 解决方案[\s\S]*?(?=\n## |$)/i,
+    /## [\p{Emoji_Presentation}\p{Emoji}\u{1F300}-\u{1F9FF}]*\s*解决方案[\s\S]*?(?=\n## |$)/iu,
   ];
 
-  for (const pattern of brutePatterns) {
+  for (const pattern of solutionPatterns) {
     const match = content.match(pattern);
     if (match) {
-      const codeBlocks = extractCodeBlocks(match[1]);
+      const codeBlocks = extractCodeBlocks(match[0]);
+      const explanation = match[0]
+        .replace(/```[\s\S]*?```/g, '')
+        .replace(/^##\s*.+$/m, '')
+        .trim();
+
       if (codeBlocks.length > 0) {
         solutions.push({
-          title: '暴力解法',
-          explanation: match[1].replace(/```[\s\S]*?```/g, '').trim(),
+          title: '题解',
+          explanation,
           codeBlocks
         });
         break;
@@ -90,20 +144,32 @@ function extractSolutions(content: string): Solution[] {
     }
   }
 
-  // Pattern 2: "优化解法" section
-  const optimizedMatch = content.match(/## 优化解法[：:\n]([\s\S]*?)(?=\n## |$)/);
-  if (optimizedMatch) {
-    const codeBlocks = extractCodeBlocks(optimizedMatch[1]);
+  // Also check for "暴力解法" and "优化解法" sections
+  const bruteMatch = content.match(/## (?:最直观的解法|暴力解法)[：:\s\S]*?(?=\n## |$)/i);
+  if (bruteMatch) {
+    const codeBlocks = extractCodeBlocks(bruteMatch[0]);
     if (codeBlocks.length > 0) {
       solutions.push({
-        title: '优化解法',
-        explanation: optimizedMatch[1].replace(/```[\s\S]*?```/g, '').trim(),
+        title: '暴力解法',
+        explanation: bruteMatch[0].replace(/```[\s\S]*?```/g, '').replace(/^##\s*.+$/m, '').trim(),
         codeBlocks
       });
     }
   }
 
-  // If no solutions found, try to extract all code blocks from the document
+  const optimizedMatch = content.match(/## 优化解法[：:\s\S]*?(?=\n## |$)/i);
+  if (optimizedMatch) {
+    const codeBlocks = extractCodeBlocks(optimizedMatch[0]);
+    if (codeBlocks.length > 0) {
+      solutions.push({
+        title: '优化解法',
+        explanation: optimizedMatch[0].replace(/```[\s\S]*?```/g, '').replace(/^##\s*.+$/m, '').trim(),
+        codeBlocks
+      });
+    }
+  }
+
+  // If no solutions found, extract all code blocks
   if (solutions.length === 0) {
     const allCodeBlocks = extractCodeBlocks(content);
     if (allCodeBlocks.length > 0) {
@@ -137,12 +203,17 @@ function parseProblem(filePath: string, categoryId: string, order: number): Prob
     id: leetcodeId.padStart(4, '0'),
     title: extractTitle(content) || titleFromFilename,
     leetcodeId: parseInt(leetcodeId, 10),
-    difficulty: 'unknown', // Per D-06: difficulty not in markdown
+    difficulty: 'unknown',
     categoryId,
     order: parseInt(fileOrder, 10),
     slug: slugify(titleFromFilename),
     description: extractDescription(content),
     lifeScenario: extractLifeScenario(content),
+    thoughtProcess: extractThoughtProcess(content),
+    codeExplanation: extractCodeExplanation(content),
+    pitfalls: extractPitfalls(content),
+    extensions: extractExtensions(content),
+    tips: extractTips(content),
     solutions: extractSolutions(content)
   };
 }
@@ -185,12 +256,10 @@ function main() {
   console.log(`Content directory: ${CONTENT_DIR}`);
   console.log(`Output directory: ${OUTPUT_DIR}`);
 
-  // Ensure output directory exists
   if (!fs.existsSync(OUTPUT_DIR)) {
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   }
 
-  // Get all category directories
   const dirs = fs.readdirSync(CONTENT_DIR)
     .filter(d => {
       const stat = fs.statSync(path.join(CONTENT_DIR, d));
@@ -203,7 +272,6 @@ function main() {
   const categories: Category[] = [];
   const allProblems: Problem[] = [];
 
-  // Parse each category
   for (const dir of dirs) {
     const result = parseCategory(path.join(CONTENT_DIR, dir));
     if (result) {
@@ -213,7 +281,6 @@ function main() {
     }
   }
 
-  // Write output files
   fs.writeFileSync(
     path.join(OUTPUT_DIR, 'categories.json'),
     JSON.stringify(categories, null, 2),

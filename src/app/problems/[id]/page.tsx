@@ -47,6 +47,11 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
   // Pre-render markdown on server
   const descriptionHtml = await renderMarkdown(problem.description);
   const lifeScenarioHtml = problem.lifeScenario ? await renderMarkdown(problem.lifeScenario) : null;
+  const thoughtProcessHtml = problem.thoughtProcess ? await renderMarkdown(problem.thoughtProcess) : null;
+  const codeExplanationHtml = problem.codeExplanation ? await renderMarkdown(problem.codeExplanation) : null;
+  const pitfallsHtml = problem.pitfalls ? await renderMarkdown(problem.pitfalls) : null;
+  const extensionsHtml = problem.extensions ? await renderMarkdown(problem.extensions) : null;
+  const tipsHtml = problem.tips ? await renderMarkdown(problem.tips) : null;
 
   return (
     <div className="container py-6">
@@ -55,6 +60,11 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
         problem={problem}
         descriptionHtml={descriptionHtml}
         lifeScenarioHtml={lifeScenarioHtml}
+        thoughtProcessHtml={thoughtProcessHtml}
+        codeExplanationHtml={codeExplanationHtml}
+        pitfallsHtml={pitfallsHtml}
+        extensionsHtml={extensionsHtml}
+        tipsHtml={tipsHtml}
       />
     </div>
   );

@@ -13,22 +13,22 @@ interface ArrayElementProps {
 const stateVariants = {
   normal: {
     scale: 1,
-    backgroundColor: 'oklch(0.7 0 0)', // gray-500 equivalent
+    backgroundColor: 'var(--muted)',
     transition: { duration: 0.2 },
   },
   comparing: {
     scale: 1.1,
-    backgroundColor: 'oklch(0.6 0.2 250)', // blue-500
+    backgroundColor: 'var(--anim-comparing)',
     transition: { duration: 0.15 },
   },
   swapping: {
     scale: 1.15,
-    backgroundColor: 'oklch(0.7 0.2 40)', // orange-500
+    backgroundColor: 'var(--anim-swap)',
     transition: { duration: 0.15 },
   },
   sorted: {
     scale: 1,
-    backgroundColor: 'oklch(0.65 0.2 145)', // green-500
+    backgroundColor: 'var(--anim-found)',
     transition: { duration: 0.3 },
   },
 };

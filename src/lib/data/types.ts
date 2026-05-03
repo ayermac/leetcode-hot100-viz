@@ -18,6 +18,11 @@ export interface Problem {
   slug: string;         // URL-friendly title
   description: string;
   lifeScenario: string; // Life analogy section
+  thoughtProcess: string; // 思路发展历程
+  codeExplanation: string; // 代码详解
+  pitfalls: string;     // 易错点剖析
+  extensions: string;   // 举一反三
+  tips: string;         // 面试技巧
   solutions: Solution[];
 }
 

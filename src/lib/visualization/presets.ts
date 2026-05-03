@@ -52,6 +52,17 @@ export const problemPresets: Record<string, ProblemPresets> = {
     ],
     placeholder: '输入数组元素，逗号分隔',
   },
+  '0153': {
+    inputType: 'array',
+    defaultValue: '4, 5, 6, 7, 0, 1, 2',
+    presets: [
+      { label: '基础用例', value: '4, 5, 6, 7, 0, 1, 2' },
+      { label: '未旋转', value: '1, 2, 3, 4, 5' },
+      { label: '两元素', value: '2, 1' },
+      { label: '最小在中间', value: '3, 4, 5, 1, 2' },
+    ],
+    placeholder: '输入旋转数组元素，逗号分隔',
+  },
 
   // Linked list algorithms (new) per D-13
   '0206': {
