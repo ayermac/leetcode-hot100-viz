@@ -162,8 +162,8 @@ export function ProblemPageClient({
             {firstSolution && (
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <span>可用语言：</span>
-                {firstSolution.codeBlocks.map((block) => (
-                  <Badge key={block.language} variant="outline" className="text-xs">
+                {firstSolution.codeBlocks.map((block, idx) => (
+                  <Badge key={`${block.language}-${idx}`} variant="outline" className="text-xs">
                     {block.language === 'go' ? 'Go' : block.language === 'python' ? 'Python' : 'Java'}
                   </Badge>
                 ))}
