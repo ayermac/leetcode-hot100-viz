@@ -1,5 +1,5 @@
 // Element states for array visualization
-export type ElementState = 'normal' | 'comparing' | 'swapping' | 'sorted';
+export type ElementState = 'normal' | 'comparing' | 'swapping' | 'sorted' | 'highlighted';
 
 // Pointer annotation
 export interface Pointer {
@@ -28,12 +28,34 @@ export interface LinkedListSnapshot {
   cycleEntryIndex: number | null;  // For cycle detection, null if no cycle
 }
 
+// Binary tree node reference (index-based for array representation)
+export interface TreeNodeRef {
+  value: number;
+  leftIndex: number | null;   // Index of left child in nodes array
+  rightIndex: number | null;  // Index of right child in nodes array
+}
+
+// Binary tree snapshot for a single animation step
+export interface BinaryTreeSnapshot {
+  nodes: TreeNodeRef[];
+  nodeStates: Map<number, ElementState>;
+  highlightedPath: number[];  // Indices of nodes in current traversal path
+  currentRoot: number | null; // Current root being processed
+}
+
+// Stack snapshot for a single animation step
+export interface StackSnapshot {
+  elements: (string | number)[];
+  elementStates: Map<number, ElementState>;
+  topPointer: number;  // Index of top element
+}
+
 // Complete animation snapshot
 export interface AnimationSnapshot {
   step: number;
   description: string;
   codeLine: number;  // For code synchronization (1-indexed, 0 means no highlight)
-  data: ArraySnapshot | LinkedListSnapshot;
+  data: ArraySnapshot | LinkedListSnapshot | BinaryTreeSnapshot | StackSnapshot;
 }
 
 // Animation player state

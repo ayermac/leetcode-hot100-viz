@@ -1,11 +1,13 @@
 'use client';
 
 import { useEffect } from 'react';
-import { AnimationSnapshot, ArraySnapshot } from '@/lib/visualization/types';
+import { AnimationSnapshot, ArraySnapshot, BinaryTreeSnapshot, LinkedListSnapshot, StackSnapshot } from '@/lib/visualization/types';
 import { useAnimationPlayer } from '@/hooks/useAnimationPlayer';
 import { useAnimationSpeed } from '@/hooks/useAnimationSpeed';
 import { ArrayVisualizer } from './ArrayVisualizer';
 import { LinkedListVisualizer } from './LinkedListVisualizer';
+import { BinaryTreeVisualizer } from './BinaryTreeVisualizer';
+import { StackVisualizer } from './StackVisualizer';
 import { PlaybackControls } from './PlaybackControls';
 
 interface AlgorithmPlayerProps {
@@ -17,6 +19,21 @@ interface AlgorithmPlayerProps {
 // Type guard to check if snapshot is ArraySnapshot
 function isArraySnapshot(data: unknown): data is ArraySnapshot {
   return data !== null && typeof data === 'object' && 'elements' in data;
+}
+
+// Type guard to check if snapshot is BinaryTreeSnapshot
+function isBinaryTreeSnapshot(data: unknown): data is BinaryTreeSnapshot {
+  return data !== null && typeof data === 'object' && 'nodes' in data && 'highlightedPath' in data;
+}
+
+// Type guard to check if snapshot is LinkedListSnapshot
+function isLinkedListSnapshot(data: unknown): data is LinkedListSnapshot {
+  return data !== null && typeof data === 'object' && 'nodes' in data && 'pointers' in data && !('highlightedPath' in data);
+}
+
+// Type guard to check if snapshot is StackSnapshot
+function isStackSnapshot(data: unknown): data is StackSnapshot {
+  return data !== null && typeof data === 'object' && 'elements' in data && 'topPointer' in data;
 }
 
 export function AlgorithmPlayer({ snapshots, autoLoad = true, onCodeLineChange }: AlgorithmPlayerProps) {
@@ -52,8 +69,18 @@ export function AlgorithmPlayer({ snapshots, autoLoad = true, onCodeLineChange }
     ? currentSnapshot.data
     : null;
 
-  // Get linked list snapshot if available (not array)
-  const linkedListSnapshot = currentSnapshot && !isArraySnapshot(currentSnapshot.data)
+  // Get binary tree snapshot if available
+  const binaryTreeSnapshot = currentSnapshot && isBinaryTreeSnapshot(currentSnapshot.data)
+    ? currentSnapshot.data
+    : null;
+
+  // Get linked list snapshot if available
+  const linkedListSnapshot = currentSnapshot && isLinkedListSnapshot(currentSnapshot.data)
+    ? currentSnapshot.data
+    : null;
+
+  // Get stack snapshot if available
+  const stackSnapshot = currentSnapshot && isStackSnapshot(currentSnapshot.data)
     ? currentSnapshot.data
     : null;
 
@@ -71,10 +98,12 @@ export function AlgorithmPlayer({ snapshots, autoLoad = true, onCodeLineChange }
         </div>
       )}
 
-      {/* Visualization - Array or Linked List */}
-      <div className="border rounded-lg overflow-hidden">
+      {/* Visualization - Array, Linked List, Binary Tree, or Stack */}
+      <div className="border rounded-lg overflow-hidden flex justify-center">
         {arraySnapshot && <ArrayVisualizer snapshot={arraySnapshot} />}
         {linkedListSnapshot && <LinkedListVisualizer snapshot={linkedListSnapshot} />}
+        {binaryTreeSnapshot && <BinaryTreeVisualizer snapshot={binaryTreeSnapshot} />}
+        {stackSnapshot && <StackVisualizer snapshot={stackSnapshot} />}
       </div>
 
       {/* Controls */}

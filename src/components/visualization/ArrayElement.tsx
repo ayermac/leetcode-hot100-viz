@@ -35,6 +35,12 @@ const stateVariants = {
     color: '#ffffff',
     transition: { duration: 0.3 },
   },
+  highlighted: {
+    scale: 1.1,
+    backgroundColor: '#8b5cf6',
+    color: '#ffffff',
+    transition: { duration: 0.15 },
+  },
 };
 
 export function ArrayElement({ value, index, state }: ArrayElementProps) {

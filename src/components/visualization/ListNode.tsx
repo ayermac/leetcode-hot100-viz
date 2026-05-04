@@ -17,6 +17,7 @@ const stateColors: Record<ElementState, string> = {
   comparing: 'bg-blue-100 border-blue-500 dark:bg-blue-900 dark:border-blue-400',
   swapping: 'bg-orange-100 border-orange-500 dark:bg-orange-900 dark:border-orange-400',
   sorted: 'bg-emerald-100 border-emerald-500 dark:bg-emerald-900 dark:border-emerald-400',
+  highlighted: 'bg-violet-100 border-violet-500 dark:bg-violet-900 dark:border-violet-400',
 };
 
 const NODE_WIDTH = 80;
