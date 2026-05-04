@@ -13,6 +13,9 @@
 ### 🎬 算法可视化
 - **数组可视化**：元素状态动画、指针标注、索引显示
 - **链表可视化**：节点连接、指针移动、环检测演示
+- **二叉树可视化**：树形结构渲染、路径高亮、遍历动画
+- **栈可视化**：垂直布局、TOP 指针、压入/弹出动画
+- **矩阵可视化**：二维网格、单元格状态、坐标追踪
 - **动画控制**：播放/暂停、步进执行、速度调节
 - **自定义输入**：修改输入数据，观察算法行为变化
 - **代码同步**：动画执行时同步高亮当前代码行
@@ -101,16 +104,47 @@ leetcode-hot100-viz/
 ## 已支持的算法可视化
 
 ### 数组类
-- 两数之和 (Two Sum)
-- 移动零 (Move Zeroes)
-- 盛最多水的容器 (Container With Most Water)
-- 三数之和 (3Sum)
+- 两数之和 (Two Sum) - LeetCode 1
+- 移动零 (Move Zeroes) - LeetCode 283
+- 盛最多水的容器 (Container With Most Water) - LeetCode 11
+- 三数之和 (3Sum) - LeetCode 15
+
+### 二分查找
+- 寻找旋转排序数组中的最小值 - LeetCode 153
+- 搜索插入位置 - LeetCode 35
+
+### 动态规划
+- 最大子数组和 - LeetCode 53
 
 ### 链表类
-- 反转链表 (Reverse Linked List)
-- 环形链表 (Linked List Cycle)
-- 合并两个有序链表 (Merge Two Sorted Lists)
-- 删除链表的倒数第 N 个节点 (Remove Nth Node From End)
+- 反转链表 (Reverse Linked List) - LeetCode 206
+- 环形链表 (Linked List Cycle) - LeetCode 141
+- 合并两个有序链表 (Merge Two Sorted Lists) - LeetCode 21
+- 删除链表的倒数第 N 个节点 - LeetCode 19
+
+### 二叉树
+- 二叉树中序遍历 - LeetCode 94
+
+### 滑动窗口
+- 无重复字符的最长子串 - LeetCode 3
+- 最小覆盖子串 - LeetCode 76
+
+### 栈
+- 有效的括号 - LeetCode 20
+- 每日温度 - LeetCode 739
+
+### 回溯
+- 全排列 - LeetCode 46
+- 子集 - LeetCode 78
+- 电话号码的字母组合 - LeetCode 17
+
+### 图
+- 岛屿数量 - LeetCode 200
+- 腐烂的橘子 - LeetCode 994
+
+### 堆
+- 数组中的第K个最大元素 - LeetCode 215
+- 前K个高频元素 - LeetCode 347
 
 ## 部署
 
