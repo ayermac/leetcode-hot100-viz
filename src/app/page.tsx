@@ -17,21 +17,53 @@ function HomeContent() {
   const problems = getProblems();
   const categories = getCategories();
   const { bookmarks } = useBookmarks();
-  const [query, setQuery] = useState('');
-  const { results, isSearching } = useProblemSearch({ problems });
-  const { filter, setFilter, resetFilter, filteredProblems, hasActiveFilters } = useProblemFilter(problems, bookmarks);
 
-  // Combine search and filter
+  // Use search hook properly - it manages its own query state
+  const {
+    query,
+    setQuery,
+    results,
+    isSearching
+  } = useProblemSearch({ problems });
+
+  const {
+    filter,
+    setFilter,
+    resetFilter,
+    filteredProblems,
+    hasActiveFilters
+  } = useProblemFilter(problems, bookmarks);
+
+  // Combine search and filter properly
   const displayProblems = useMemo(() => {
+    let result = problems;
+
+    // Apply search if searching
     if (isSearching) {
-      return results;
+      result = results;
     }
+
+    // Apply filters - but when searching, we need to filter the search results
     if (hasActiveFilters) {
-      return filteredProblems;
+      result = result.filter((problem) => {
+        // Difficulty filter
+        if (filter.difficulty !== 'all' && problem.difficulty !== filter.difficulty) {
+          return false;
+        }
+        // Category filter
+        if (filter.categoryId !== 'all' && problem.categoryId !== filter.categoryId) {
+          return false;
+        }
+        // Bookmark filter
+        if (filter.bookmarkedOnly && !bookmarks.includes(problem.id)) {
+          return false;
+        }
+        return true;
+      });
     }
-    // When no search and no filter, show all problems
-    return problems;
-  }, [isSearching, results, hasActiveFilters, filteredProblems, problems]);
+
+    return result;
+  }, [problems, isSearching, results, hasActiveFilters, filter, bookmarks]);
 
   return (
     <>

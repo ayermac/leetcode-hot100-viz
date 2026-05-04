@@ -147,7 +147,7 @@ export function CodeViewer({ solution, language, onLanguageChange, highlightLine
       language={codeBlock.language as Language}
       highlightLine={highlightLine}
       availableLanguages={availableLanguages}
-      selectedLanguage={codeBlock.language as Language}
+      selectedLanguage={language}
       onLanguageChange={onLanguageChange}
     />
   );
