@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect } from 'react';
-import { AnimationSnapshot, ArraySnapshot, BinaryTreeSnapshot, LinkedListSnapshot, StackSnapshot } from '@/lib/visualization/types';
+import { AnimationSnapshot, ArraySnapshot, BinaryTreeSnapshot, LinkedListSnapshot, StackSnapshot, MatrixSnapshot } from '@/lib/visualization/types';
 import { useAnimationPlayer } from '@/hooks/useAnimationPlayer';
 import { useAnimationSpeed } from '@/hooks/useAnimationSpeed';
 import { ArrayVisualizer } from './ArrayVisualizer';
 import { LinkedListVisualizer } from './LinkedListVisualizer';
 import { BinaryTreeVisualizer } from './BinaryTreeVisualizer';
 import { StackVisualizer } from './StackVisualizer';
+import { MatrixVisualizer } from './MatrixVisualizer';
 import { PlaybackControls } from './PlaybackControls';
 
 interface AlgorithmPlayerProps {
@@ -34,6 +35,11 @@ function isLinkedListSnapshot(data: unknown): data is LinkedListSnapshot {
 // Type guard to check if snapshot is StackSnapshot
 function isStackSnapshot(data: unknown): data is StackSnapshot {
   return data !== null && typeof data === 'object' && 'elements' in data && 'topPointer' in data;
+}
+
+// Type guard to check if snapshot is MatrixSnapshot
+function isMatrixSnapshot(data: unknown): data is MatrixSnapshot {
+  return data !== null && typeof data === 'object' && 'grid' in data && 'cellStates' in data;
 }
 
 export function AlgorithmPlayer({ snapshots, autoLoad = true, onCodeLineChange }: AlgorithmPlayerProps) {
@@ -84,6 +90,11 @@ export function AlgorithmPlayer({ snapshots, autoLoad = true, onCodeLineChange }
     ? currentSnapshot.data
     : null;
 
+  // Get matrix snapshot if available
+  const matrixSnapshot = currentSnapshot && isMatrixSnapshot(currentSnapshot.data)
+    ? currentSnapshot.data
+    : null;
+
   return (
     <div className="flex flex-col gap-4">
       {/* Step description */}
@@ -98,12 +109,13 @@ export function AlgorithmPlayer({ snapshots, autoLoad = true, onCodeLineChange }
         </div>
       )}
 
-      {/* Visualization - Array, Linked List, Binary Tree, or Stack */}
+      {/* Visualization - Array, Linked List, Binary Tree, Stack, or Matrix */}
       <div className="border rounded-lg overflow-hidden flex justify-center">
         {arraySnapshot && <ArrayVisualizer snapshot={arraySnapshot} />}
         {linkedListSnapshot && <LinkedListVisualizer snapshot={linkedListSnapshot} />}
         {binaryTreeSnapshot && <BinaryTreeVisualizer snapshot={binaryTreeSnapshot} />}
         {stackSnapshot && <StackVisualizer snapshot={stackSnapshot} />}
+        {matrixSnapshot && <MatrixVisualizer snapshot={matrixSnapshot} />}
       </div>
 
       {/* Controls */}

@@ -50,12 +50,20 @@ export interface StackSnapshot {
   topPointer: number;  // Index of top element
 }
 
+// Matrix snapshot for 2D grid visualization
+export interface MatrixSnapshot {
+  grid: number[][];
+  cellStates: Map<string, ElementState>;  // Key: "row,col"
+  highlightedCells: string[];  // Cells to highlight
+  currentCell: { row: number; col: number } | null;
+}
+
 // Complete animation snapshot
 export interface AnimationSnapshot {
   step: number;
   description: string;
   codeLine: number;  // For code synchronization (1-indexed, 0 means no highlight)
-  data: ArraySnapshot | LinkedListSnapshot | BinaryTreeSnapshot | StackSnapshot;
+  data: ArraySnapshot | LinkedListSnapshot | BinaryTreeSnapshot | StackSnapshot | MatrixSnapshot;
 }
 
 // Animation player state

@@ -28,5 +28,18 @@ export { executeMinWindow, getMinWindowDefaultInput } from './slidingWindow';
 export { executeValidParentheses, getValidParenthesesDefaultInput } from './stackAlgorithms';
 export { executeDailyTemperatures, getDailyTemperaturesDefaultInput } from './stackAlgorithms';
 
+// Executor functions - Graph algorithms
+export { executeNumIslands, getNumIslandsDefaultInput } from './graphAlgorithms';
+export { executeOrangesRotting, getOrangesRottingDefaultInput } from './graphAlgorithms';
+
+// Executor functions - Backtracking algorithms
+export { executePermute, getPermuteDefaultInput } from './backtrackingAlgorithms';
+export { executeSubsets, getSubsetsDefaultInput } from './backtrackingAlgorithms';
+export { executeLetterCombinations, getLetterCombinationsDefaultInput } from './backtrackingAlgorithms';
+
+// Executor functions - Heap algorithms
+export { executeFindKthLargest, getFindKthLargestDefaultInput } from './heapAlgorithms';
+export { executeTopKFrequent, getTopKFrequentDefaultInput } from './heapAlgorithms';
+
 // Utilities
 export { generatorToSnapshots, createNormalStates } from './utils';
