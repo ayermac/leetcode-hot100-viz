@@ -10,14 +10,14 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-background/80 backdrop-blur-xl">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center">
           <Link href="/" className="mr-6 flex items-center space-x-2 group">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-600 to-violet-500 flex items-center justify-center">
               <Code2 className="h-5 w-5 text-white" />
             </div>
-            <span className="font-bold text-xl text-slate-900 group-hover:text-violet-600 transition-colors">
+            <span className="font-bold text-xl text-foreground group-hover:text-violet-600 transition-colors">
               LeetCode Hot 100
             </span>
           </Link>
@@ -33,7 +33,7 @@ export function Header() {
           <Button
             variant="ghost"
             size="icon"
-            className="sm:hidden text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+            className="sm:hidden text-muted-foreground hover:text-foreground hover:bg-accent"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="切换菜单"
           >
@@ -43,7 +43,7 @@ export function Header() {
       </div>
 
       {mobileMenuOpen && (
-        <div className="sm:hidden border-t border-slate-200 bg-white">
+        <div className="sm:hidden border-t border-border bg-background">
           <nav className="container py-4 flex flex-col space-y-2">
             <MobileNavLink href="/" onClick={() => setMobileMenuOpen(false)}>首页</MobileNavLink>
             <MobileNavLink href="/categories" onClick={() => setMobileMenuOpen(false)}>分类</MobileNavLink>
@@ -61,8 +61,8 @@ function NavLink({ href, children, active = false, icon }: { href: string; child
       href={href}
       className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
         active
-          ? 'text-slate-900 bg-slate-100'
-          : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
+          ? 'text-foreground bg-accent'
+          : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
       }`}
     >
       {icon}
@@ -76,7 +76,7 @@ function MobileNavLink({ href, children, onClick, icon }: { href: string; childr
     <Link
       href={href}
       onClick={onClick}
-      className="px-4 py-3 rounded-xl text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-all duration-200 flex items-center gap-2"
+      className="px-4 py-3 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-all duration-200 flex items-center gap-2"
     >
       {icon}
       {children}
