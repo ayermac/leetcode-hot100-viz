@@ -2,6 +2,8 @@ import { getProblemById, getCategoryById, getProblems } from '@/lib/data/loader'
 import { renderMarkdown } from '@/lib/mdx';
 import { ProblemHeader } from '@/components/ProblemHeader';
 import { ProblemPageClient } from './ProblemPageClient';
+import { RichProblemView } from '@/components/RichProblemView';
+import twoSumRichContent from '@/../data/rich/0001.json';
 
 interface ProblemPageProps {
   params: Promise<{
@@ -40,6 +42,16 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
           <h1 className="text-2xl font-bold mb-4">分类不存在</h1>
           <p className="text-muted-foreground">找不到该题目所属分类。</p>
         </div>
+      </div>
+    );
+  }
+
+  // Use RichProblemView for problems with rich content
+  if (id === '0001') {
+    return (
+      <div className="container py-6">
+        <ProblemHeader problem={problem} category={category} />
+        <RichProblemView content={twoSumRichContent} />
       </div>
     );
   }

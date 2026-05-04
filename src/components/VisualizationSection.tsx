@@ -8,6 +8,8 @@ import {
   executeContainerWithWater,
   executeThreeSum,
   executeFindMin,
+  executeSearchInsert,
+  executeMaxSubArray,
   executeReverseList,
   executeHasCycle,
   executeMergeTwoLists,
@@ -32,6 +34,13 @@ function parseArrayWithNInput(input: string): { values: number[]; n: number } {
   return { values, n };
 }
 
+function parseArrayWithTargetInput(input: string): { nums: number[]; target: number } {
+  const [arrPart, targetPart] = input.split(';');
+  const nums = parseSimpleArray(arrPart);
+  const target = parseInt(targetPart?.replace('target=', '').trim() || '0');
+  return { nums, target };
+}
+
 function parseTwoArraysInput(input: string): { list1: number[]; list2: number[] } {
   const [arr1, arr2] = input.split('|');
   return {
@@ -41,7 +50,7 @@ function parseTwoArraysInput(input: string): { list1: number[]; list2: number[] 
 }
 
 // Problem IDs that support visualization
-const supportedProblemIds = new Set(['0001', '0283', '0011', '0015', '0153', '0206', '0141', '0021', '0019']);
+const supportedProblemIds = new Set(['0001', '0283', '0011', '0015', '0153', '0035', '0053', '0206', '0141', '0021', '0019']);
 
 export function isVisualizationSupported(problemId: string): boolean {
   return supportedProblemIds.has(problemId);
@@ -64,6 +73,10 @@ export function VisualizationSection({ problemId, onCodeLineChange }: Visualizat
         return executeThreeSum(parseSimpleArray(customInput));
       case '0153':
         return executeFindMin({ nums: parseSimpleArray(customInput) });
+      case '0035':
+        return executeSearchInsert(parseArrayWithTargetInput(customInput));
+      case '0053':
+        return executeMaxSubArray({ nums: parseSimpleArray(customInput) });
       case '0206':
         return executeReverseList({ values: parseSimpleArray(customInput) });
       case '0141':

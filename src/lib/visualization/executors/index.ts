@@ -6,6 +6,10 @@ export { executeThreeSum, getThreeSumDefaultInput } from './threeSum';
 
 // Executor functions - Binary Search algorithms
 export { executeFindMin, getFindMinDefaultInput } from './findMin';
+export { executeSearchInsert, getSearchInsertDefaultInput } from './searchInsert';
+
+// Executor functions - Dynamic Programming algorithms
+export { executeMaxSubArray, getMaxSubArrayDefaultInput } from './maxSubArray';
 
 // Executor functions - Linked List algorithms
 export { executeReverseList, getReverseListDefaultInput } from './reverseList';

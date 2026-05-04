@@ -15,7 +15,7 @@ interface CustomInputPanelProps {
   presets: PresetCase[];
   onInputChange: (value: string) => void;
   placeholder?: string;
-  inputType: 'array' | 'linkedlist' | 'twoArrays' | 'arrayWithN';
+  inputType: 'array' | 'linkedlist' | 'twoArrays' | 'arrayWithN' | 'arrayWithTarget';
   className?: string;
 }
 
@@ -66,6 +66,20 @@ function validateInput(value: string, inputType: string): { valid: boolean; erro
     const arrParts = arrayPart.split(',').map(s => s.trim()).filter(s => s);
     if (n < 1 || n > arrParts.length) {
       return { valid: false, error: `n 必须在 1 到 ${arrParts.length} 之间` };
+    }
+  } else if (inputType === 'arrayWithTarget') {
+    // Format: "1,3,5,6;target=5"
+    const [arrayPart, targetPart] = value.split(';');
+    if (!targetPart || !targetPart.includes('target=')) {
+      return { valid: false, error: '请使用格式: 1,3,5,6;target=5' };
+    }
+    const target = parseInt(targetPart.replace('target=', '').trim());
+    if (isNaN(target)) {
+      return { valid: false, error: 'target 必须是有效数字' };
+    }
+    const arrParts = arrayPart.split(',').map(s => s.trim()).filter(s => s);
+    if (arrParts.length > 50) {
+      return { valid: false, error: '数组元素数量不能超过 50 个' };
     }
   }
 

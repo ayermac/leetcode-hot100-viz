@@ -14,21 +14,25 @@ const stateVariants = {
   normal: {
     scale: 1,
     backgroundColor: 'var(--muted)',
+    color: 'var(--foreground)',
     transition: { duration: 0.2 },
   },
   comparing: {
     scale: 1.1,
     backgroundColor: 'var(--anim-comparing)',
+    color: '#1a1a2e',
     transition: { duration: 0.15 },
   },
   swapping: {
     scale: 1.15,
     backgroundColor: 'var(--anim-swap)',
+    color: '#1a1a2e',
     transition: { duration: 0.15 },
   },
   sorted: {
     scale: 1,
     backgroundColor: 'var(--anim-found)',
+    color: '#ffffff',
     transition: { duration: 0.3 },
   },
 };

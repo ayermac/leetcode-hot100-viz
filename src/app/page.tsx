@@ -29,8 +29,9 @@ function HomeContent() {
     if (hasActiveFilters) {
       return filteredProblems;
     }
-    return [];
-  }, [isSearching, results, hasActiveFilters, filteredProblems]);
+    // When no search and no filter, show all problems
+    return problems;
+  }, [isSearching, results, hasActiveFilters, filteredProblems, problems]);
 
   return (
     <>

@@ -4,7 +4,7 @@ interface PresetCase {
 }
 
 interface ProblemPresets {
-  inputType: 'array' | 'linkedlist' | 'twoArrays' | 'arrayWithN';
+  inputType: 'array' | 'linkedlist' | 'twoArrays' | 'arrayWithN' | 'arrayWithTarget';
   defaultValue: string;
   presets: PresetCase[];
   placeholder: string;
@@ -62,6 +62,32 @@ export const problemPresets: Record<string, ProblemPresets> = {
       { label: '最小在中间', value: '3, 4, 5, 1, 2' },
     ],
     placeholder: '输入旋转数组元素，逗号分隔',
+  },
+
+  // Binary Search - Search Insert Position (0035)
+  '0035': {
+    inputType: 'array',
+    defaultValue: '1, 3, 5, 6;target=5',
+    presets: [
+      { label: '找到目标', value: '1, 3, 5, 6;target=5' },
+      { label: '插入中间', value: '1, 3, 5, 6;target=2' },
+      { label: '插入末尾', value: '1, 3, 5, 6;target=7' },
+      { label: '插入开头', value: '1, 3, 5, 6;target=0' },
+    ],
+    placeholder: '输入有序数组;target=目标值',
+  },
+
+  // Dynamic Programming - Maximum Subarray (0053)
+  '0053': {
+    inputType: 'array',
+    defaultValue: '-2, 1, -3, 4, -1, 2, 1, -5, 4',
+    presets: [
+      { label: '经典用例', value: '-2, 1, -3, 4, -1, 2, 1, -5, 4' },
+      { label: '全负数', value: '-5, -2, -8, -1' },
+      { label: '全正数', value: '1, 2, 3, 4, 5' },
+      { label: '单个元素', value: '5' },
+    ],
+    placeholder: '输入整数数组，逗号分隔',
   },
 
   // Linked list algorithms (new) per D-13

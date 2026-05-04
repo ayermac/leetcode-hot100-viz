@@ -1,0 +1,116 @@
+{
+  "id": "0001",
+  "title": "两数之和",
+  "slug": "two-sum",
+  "lifeScenario": {
+    "title": "生活中的算法",
+    "icon": "shopping-cart",
+    "story": "还记得上次去超市购物吗？你拿着一张100元钞票，挑选了一些商品，收银员告诉你总价是87元。这时候，收银员要找给你13元。但如果收银柜里只有零散的1元、5元、10元，收银员该如何快速地从这些零钱中找出两张，正好加起来等于13元呢？这就是我们要讨论的「两数之和」问题在生活中的一个实例。",
+    "analogy": "数组就像收银柜里的零钱，target就是要找给顾客的总金额"
+  },
+  "problemStatement": {
+    "description": "给定一个整数数组 nums 和一个整数目标值 target，请你在该数组中找出和为目标值 target 的那两个整数，并返回它们的数组下标。假设每种输入只会对应一个答案，而且不能重复使用相同的元素。",
+    "examples": [
+      {
+        "input": "nums = [2, 7, 11, 15], target = 9",
+        "output": "[0, 1]",
+        "explanation": "因为 nums[0] + nums[1] == 9，返回 [0, 1]"
+      }
+    ]
+  },
+  "solutions": [
+    {
+      "name": "暴力穷举",
+      "nameEn": "Brute Force",
+      "icon": "🔨",
+      "description": "拿起第一个数字，依次与后面的数字配对，检查是否等于目标值。如果不行，就拿起下一个数字，重复这个过程。",
+      "steps": [
+        { "step": 1, "title": "拿起第一个数字", "description": "从数组第一个元素开始" },
+        { "step": 2, "title": "依次配对", "description": "与后面的每个数字相加，检查是否等于目标值" },
+        { "step": 3, "title": "找到答案", "description": "如果配对成功，返回这两个数字的位置" },
+        { "step": 4, "title": "继续搜索", "description": "如果没找到，拿起第二个数字，重复步骤2和3" },
+        { "step": 5, "title": "遍历完成", "description": "以此类推，直到找到答案或检查完所有可能" }
+      ],
+      "complexity": {
+        "time": "O(n²)",
+        "space": "O(1)",
+        "pros": ["直观、易于理解", "实现简单", "不需要额外空间"],
+        "cons": ["效率低，数据量大时会超时"],
+        "suitableFor": "数组规模小（n < 1000）的场景"
+      },
+      "code": "func twoSum(nums []int, target int) []int {\n    n := len(nums)\n    for i := 0; i < n; i++ {\n        for j := i + 1; j < n; j++ {\n            if nums[i] + nums[j] == target {\n                return []int{i, j}\n            }\n        }\n    }\n    return []int{}\n}"
+    },
+    {
+      "name": "哈希表",
+      "nameEn": "Hash Table",
+      "icon": "⚡",
+      "description": "拿着一张5元，要找给顾客13元。这时候想：我需要找一张8元的（13 - 5 = 8）。如果能立即知道柜台里有没有8元，问题就解决了！这就是哈希表的核心思想。",
+      "steps": [
+        { "step": 1, "title": "创建哈希表", "description": "用于存储每个数字及其下标" },
+        { "step": 2, "title": "遍历数组", "description": "遍历数组中的每个数字 current" },
+        { "step": 3, "title": "计算补数", "description": "complement = target - current" },
+        { "step": 4, "title": "查找哈希表", "description": "• 如果找到了，说明我们找到了答案\n• 如果没找到，把当前数字和它的下标放入哈希表，继续遍历" }
+      ],
+      "complexity": {
+        "time": "O(n)",
+        "space": "O(n)",
+        "pros": ["效率高，只需遍历一次", "适合大规模数据"],
+        "cons": ["需要额外空间存储哈希表"],
+        "suitableFor": "大规模数据、空间换时间的场景"
+      },
+      "code": "func twoSum(nums []int, target int) []int {\n    hashTable := make(map[int]int)\n    for i, num := range nums {\n        complement := target - num\n        if j, ok := hashTable[complement]; ok {\n            return []int{j, i}\n        }\n        hashTable[num] = i\n    }\n    return []int{}\n}"
+    }
+  ],
+  "comparisonTable": {
+    "headers": ["解法", "时间复杂度", "空间复杂度", "优点", "缺点", "适用场景"],
+    "rows": [
+      {
+        "method": "暴力解法 (双重循环)",
+        "timeComplexity": "O(n²)",
+        "spaceComplexity": "O(1)",
+        "pros": "直观、易于理解",
+        "cons": "效率低，数据量大时会超时",
+        "suitable": "数组规模小的场景"
+      },
+      {
+        "method": "哈希表解法",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "pros": "效率高，只需遍历一次",
+        "cons": "需要额外空间存储哈希表",
+        "suitable": "大规模数据场景"
+      }
+    ]
+  },
+  "exampleRuns": [
+    {
+      "methodName": "暴力解法示例运行",
+      "steps": [
+        { "step": 1, "i": "0", "j": "1", "nums[i]": "2", "nums[j]": "7", "sum": "9", "match": "✓" },
+        { "step": 2, "i": "0", "j": "-", "nums[i]": "2", "nums[j]": "-", "sum": "-", "match": "返回 [0, 1]" }
+      ]
+    },
+    {
+      "methodName": "哈希表示例运行",
+      "steps": [
+        { "step": 1, "i": "0", "current": "2", "complement": "7", "hashTable": "{}", "result": "找不到7，将2加入表" },
+        { "step": 2, "i": "1", "current": "7", "complement": "2", "hashTable": "{2:0}", "result": "✓ 找到2！返回 [0, 1]" }
+      ]
+    }
+  ],
+  "patternSummary": {
+    "patternName": "查找配对元素",
+    "description": "这道题体现了一个重要的算法模式：查找配对元素。类似的「查找配对元素」问题在算法题中经常出现。",
+    "generalApproach": [
+      "先思考暴力解法：两层循环遍历所有可能的组合",
+      "考虑优化：能否将「查找配对元素」的过程优化到O(1)时间复杂度",
+      "思考数据结构：通常哈希表是优化这类问题的利器"
+    ],
+    "relatedProblems": [
+      "判断数组中是否存在两个数的差等于某个值",
+      "在排序数组中找出两个数，它们的平方和等于某个值",
+      "在字符串中找出两个字符，它们的 ASCII 码之和等于某个值",
+      "判断链表中是否存在两个节点，它们的值之和等于某个值"
+    ]
+  }
+}

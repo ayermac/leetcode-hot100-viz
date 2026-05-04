@@ -190,7 +190,11 @@ export function ProblemPageClient({
 
             <div className="p-6 text-center text-muted-foreground bg-muted/50 rounded-lg">
               <p>该题目暂无动画演示</p>
-              <p className="text-sm mt-1">目前支持的动画题目：两数之和、移动零、盛水容器、三数之和、链表相关题目等</p>
+              <p className="text-sm mt-1">
+                目前支持 11 道动画题目：两数之和、移动零、盛水容器、三数之和、
+                搜索插入位置、最大子数组和、寻找旋转数组最小值、反转链表、环形链表、
+                合并有序链表、删除链表倒数第N个节点
+              </p>
             </div>
           </div>
         )}
