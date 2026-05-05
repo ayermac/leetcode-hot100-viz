@@ -1,5 +1,6 @@
 import { AnimationSnapshot, ElementState, Pointer } from '../types';
 import { createNormalStates, generatorToSnapshots } from './utils';
+import { twoSumInputSchema, validateInput } from './validation';
 
 interface TwoSumInput {
   nums: number[];
@@ -80,8 +81,23 @@ function* twoSumGenerator(
   };
 }
 
-export function executeTwoSum(input: TwoSumInput): AnimationSnapshot[] {
-  return generatorToSnapshots(twoSumGenerator(input.nums, input.target));
+export function executeTwoSum(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(twoSumInputSchema, input);
+  if (!validation.success) {
+    // Return error snapshot
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        elements: [],
+        elementStates: new Map(),
+        pointers: [],
+      },
+    }];
+  }
+  const { nums, target } = validation.data;
+  return generatorToSnapshots(twoSumGenerator(nums, target));
 }
 
 export function getTwoSumDefaultInput(): TwoSumInput {
