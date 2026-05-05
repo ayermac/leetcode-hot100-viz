@@ -1,12 +1,8 @@
 import { AnimationSnapshot, ElementState, ArraySnapshot } from '../types';
 import { createNormalStates, generatorToSnapshots } from './utils';
+import { findKthLargestInputSchema, topKFrequentInputSchema, validateInput } from './validation';
 
 // Find Kth Largest Element (LeetCode 215)
-interface FindKthLargestInput {
-  nums: number[];
-  k: number;
-}
-
 function* findKthLargestGenerator(
   nums: number[],
   k: number
@@ -148,20 +144,29 @@ function* findKthLargestGenerator(
   };
 }
 
-export function executeFindKthLargest(input: FindKthLargestInput): AnimationSnapshot[] {
-  return generatorToSnapshots(findKthLargestGenerator([...input.nums], input.k));
+export function executeFindKthLargest(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(findKthLargestInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        elements: [],
+        elementStates: new Map(),
+        pointers: [],
+      },
+    }];
+  }
+  const { nums, k } = validation.data;
+  return generatorToSnapshots(findKthLargestGenerator([...nums], k));
 }
 
-export function getFindKthLargestDefaultInput(): FindKthLargestInput {
+export function getFindKthLargestDefaultInput() {
   return { nums: [3, 2, 1, 5, 6, 4], k: 2 };
 }
 
 // Top K Frequent Elements (LeetCode 347)
-interface TopKFrequentInput {
-  nums: number[];
-  k: number;
-}
-
 function* topKFrequentGenerator(
   nums: number[],
   k: number
@@ -325,10 +330,24 @@ function* topKFrequentGenerator(
   };
 }
 
-export function executeTopKFrequent(input: TopKFrequentInput): AnimationSnapshot[] {
-  return generatorToSnapshots(topKFrequentGenerator([...input.nums], input.k));
+export function executeTopKFrequent(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(topKFrequentInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        elements: [],
+        elementStates: new Map(),
+        pointers: [],
+      },
+    }];
+  }
+  const { nums, k } = validation.data;
+  return generatorToSnapshots(topKFrequentGenerator([...nums], k));
 }
 
-export function getTopKFrequentDefaultInput(): TopKFrequentInput {
+export function getTopKFrequentDefaultInput() {
   return { nums: [1, 1, 1, 2, 2, 3], k: 2 };
 }

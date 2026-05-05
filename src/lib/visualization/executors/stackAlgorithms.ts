@@ -1,9 +1,6 @@
 import { AnimationSnapshot, ElementState, StackSnapshot } from '../types';
 import { generatorToSnapshots } from './utils';
-
-interface ValidParenthesesInput {
-  s: string;
-}
+import { validParenthesesInputSchema, dailyTemperaturesInputSchema, validateInput } from './validation';
 
 function* validParenthesesGenerator(
   s: string
@@ -15,7 +12,6 @@ function* validParenthesesGenerator(
     '}': '{',
   };
 
-  // Initial state
   yield {
     description: `开始验证括号字符串: "${s}"`,
     codeLine: 1,
@@ -30,7 +26,6 @@ function* validParenthesesGenerator(
     const char = s[i];
     const isOpening = char === '(' || char === '[' || char === '{';
 
-    // Show current character being processed
     const processStates = new Map<number, ElementState>();
     if (stack.length > 0) {
       processStates.set(stack.length - 1, 'highlighted');
@@ -47,7 +42,6 @@ function* validParenthesesGenerator(
     };
 
     if (isOpening) {
-      // Push opening bracket
       stack.push(char);
       const pushStates = new Map<number, ElementState>();
       pushStates.set(stack.length - 1, 'comparing');
@@ -62,7 +56,6 @@ function* validParenthesesGenerator(
         } as StackSnapshot,
       };
     } else {
-      // Closing bracket - check match
       if (stack.length === 0) {
         const errorStates = new Map<number, ElementState>();
         yield {
@@ -94,7 +87,6 @@ function* validParenthesesGenerator(
         return;
       }
 
-      // Pop matching bracket
       stack.pop();
       const popStates = new Map<number, ElementState>();
       if (stack.length > 0) {
@@ -113,7 +105,6 @@ function* validParenthesesGenerator(
     }
   }
 
-  // Final state
   if (stack.length === 0) {
     yield {
       description: `验证通过！括号字符串有效`,
@@ -139,19 +130,27 @@ function* validParenthesesGenerator(
   }
 }
 
-export function executeValidParentheses(input: ValidParenthesesInput): AnimationSnapshot[] {
-  return generatorToSnapshots(validParenthesesGenerator(input.s));
+export function executeValidParentheses(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(validParenthesesInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        elements: [],
+        elementStates: new Map(),
+        topPointer: -1,
+      },
+    }];
+  }
+  return generatorToSnapshots(validParenthesesGenerator(validation.data.s));
 }
 
-export function getValidParenthesesDefaultInput(): ValidParenthesesInput {
+export function getValidParenthesesDefaultInput() {
   return {
     s: '()[]{}',
   };
-}
-
-// Daily Temperatures (LeetCode 739) - Monotonic Stack
-interface DailyTemperaturesInput {
-  temperatures: number[];
 }
 
 function* dailyTemperaturesGenerator(
@@ -159,9 +158,8 @@ function* dailyTemperaturesGenerator(
 ): Generator<Omit<AnimationSnapshot, 'step'>> {
   const n = temperatures.length;
   const result = new Array(n).fill(0);
-  const stack: number[] = []; // Indices of temperatures
+  const stack: number[] = [];
 
-  // Initial state
   yield {
     description: `开始计算每日温度，输入: [${temperatures.join(', ')}]`,
     codeLine: 1,
@@ -173,7 +171,6 @@ function* dailyTemperaturesGenerator(
   };
 
   for (let i = 0; i < n; i++) {
-    // Show current day
     const currentStates = new Map<number, ElementState>();
     if (stack.length > 0) {
       currentStates.set(stack.length - 1, 'highlighted');
@@ -189,7 +186,6 @@ function* dailyTemperaturesGenerator(
       } as StackSnapshot,
     };
 
-    // Pop while current temperature is higher
     while (stack.length > 0 && temperatures[i] > temperatures[stack[stack.length - 1]]) {
       const prevIndex = stack.pop()!;
       result[prevIndex] = i - prevIndex;
@@ -210,7 +206,6 @@ function* dailyTemperaturesGenerator(
       };
     }
 
-    // Push current index
     stack.push(i);
     const pushStates = new Map<number, ElementState>();
     pushStates.set(stack.length - 1, 'comparing');
@@ -226,7 +221,6 @@ function* dailyTemperaturesGenerator(
     };
   }
 
-  // Final state
   yield {
     description: `完成！结果: [${result.join(', ')}]`,
     codeLine: 0,
@@ -238,11 +232,24 @@ function* dailyTemperaturesGenerator(
   };
 }
 
-export function executeDailyTemperatures(input: DailyTemperaturesInput): AnimationSnapshot[] {
-  return generatorToSnapshots(dailyTemperaturesGenerator(input.temperatures));
+export function executeDailyTemperatures(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(dailyTemperaturesInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        elements: [],
+        elementStates: new Map(),
+        topPointer: -1,
+      },
+    }];
+  }
+  return generatorToSnapshots(dailyTemperaturesGenerator(validation.data.temperatures));
 }
 
-export function getDailyTemperaturesDefaultInput(): DailyTemperaturesInput {
+export function getDailyTemperaturesDefaultInput() {
   return {
     temperatures: [73, 74, 75, 71, 69, 72, 76, 73],
   };

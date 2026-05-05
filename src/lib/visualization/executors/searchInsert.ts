@@ -1,10 +1,6 @@
 import { AnimationSnapshot, ElementState, Pointer } from '../types';
 import { createNormalStates, generatorToSnapshots } from './utils';
-
-interface SearchInsertInput {
-  nums: number[];
-  target: number;
-}
+import { searchInsertInputSchema, validateInput } from './validation';
 
 function* searchInsertGenerator(
   nums: number[],
@@ -112,11 +108,25 @@ function* searchInsertGenerator(
   };
 }
 
-export function executeSearchInsert(input: SearchInsertInput): AnimationSnapshot[] {
-  return generatorToSnapshots(searchInsertGenerator(input.nums, input.target));
+export function executeSearchInsert(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(searchInsertInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        elements: [],
+        elementStates: new Map(),
+        pointers: [],
+      },
+    }];
+  }
+  const { nums, target } = validation.data;
+  return generatorToSnapshots(searchInsertGenerator(nums, target));
 }
 
-export function getSearchInsertDefaultInput(): SearchInsertInput {
+export function getSearchInsertDefaultInput() {
   return {
     nums: [1, 3, 5, 6],
     target: 5,

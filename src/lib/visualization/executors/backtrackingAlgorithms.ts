@@ -1,10 +1,6 @@
 import { AnimationSnapshot, ElementState, ArraySnapshot } from '../types';
 import { createNormalStates, generatorToSnapshots } from './utils';
-
-// Permutations (LeetCode 46)
-interface PermuteInput {
-  nums: number[];
-}
+import { permuteInputSchema, subsetsInputSchema, letterCombinationsInputSchema, validateInput } from './validation';
 
 function* permuteGenerator(
   nums: number[]
@@ -13,7 +9,6 @@ function* permuteGenerator(
   const used = new Set<number>();
   const path: number[] = [];
 
-  // Initial state
   yield {
     description: `开始生成全排列，输入: [${nums.join(', ')}]`,
     codeLine: 1,
@@ -26,7 +21,6 @@ function* permuteGenerator(
 
   function* backtrack(): Generator<Omit<AnimationSnapshot, 'step'>> {
     if (path.length === nums.length) {
-      // Found a permutation
       const permStates = new Map<number, ElementState>();
       path.forEach((_, i) => {
         permStates.set(i, 'sorted');
@@ -49,7 +43,6 @@ function* permuteGenerator(
     for (let i = 0; i < nums.length; i++) {
       if (used.has(i)) continue;
 
-      // Show element being considered
       const considerStates = new Map<number, ElementState>();
       used.forEach(idx => {
         considerStates.set(idx, 'sorted');
@@ -66,17 +59,14 @@ function* permuteGenerator(
         } as ArraySnapshot,
       };
 
-      // Make choice
       used.add(i);
       path.push(nums[i]);
 
       yield* backtrack();
 
-      // Undo choice
       used.delete(i);
       path.pop();
 
-      // Show backtrack
       const backStates = new Map<number, ElementState>();
       used.forEach(idx => {
         backStates.set(idx, 'sorted');
@@ -96,7 +86,6 @@ function* permuteGenerator(
 
   yield* backtrack();
 
-  // Final state
   yield {
     description: `完成！共生成 ${result.length} 个排列`,
     codeLine: 0,
@@ -108,17 +97,25 @@ function* permuteGenerator(
   };
 }
 
-export function executePermute(input: PermuteInput): AnimationSnapshot[] {
-  return generatorToSnapshots(permuteGenerator(input.nums));
+export function executePermute(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(permuteInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        elements: [],
+        elementStates: new Map(),
+        pointers: [],
+      },
+    }];
+  }
+  return generatorToSnapshots(permuteGenerator(validation.data.nums));
 }
 
-export function getPermuteDefaultInput(): PermuteInput {
+export function getPermuteDefaultInput() {
   return { nums: [1, 2, 3] };
-}
-
-// Subsets (LeetCode 78)
-interface SubsetsInput {
-  nums: number[];
 }
 
 function* subsetsGenerator(
@@ -127,7 +124,6 @@ function* subsetsGenerator(
   const result: number[][] = [];
   const path: number[] = [];
 
-  // Initial state
   yield {
     description: `开始生成子集，输入: [${nums.join(', ')}]`,
     codeLine: 1,
@@ -139,7 +135,6 @@ function* subsetsGenerator(
   };
 
   function* backtrack(start: number): Generator<Omit<AnimationSnapshot, 'step'>> {
-    // Collect current subset
     result.push([...path]);
 
     const subsetStates = new Map<number, ElementState>();
@@ -158,7 +153,6 @@ function* subsetsGenerator(
     };
 
     for (let i = start; i < nums.length; i++) {
-      // Show element being considered
       const considerStates = new Map<number, ElementState>();
       path.forEach((_, idx) => {
         considerStates.set(idx, 'sorted');
@@ -175,15 +169,12 @@ function* subsetsGenerator(
         } as ArraySnapshot,
       };
 
-      // Make choice
       path.push(nums[i]);
 
       yield* backtrack(i + 1);
 
-      // Undo choice
       path.pop();
 
-      // Show backtrack
       const backStates = new Map<number, ElementState>();
       path.forEach((_, idx) => {
         backStates.set(idx, 'sorted');
@@ -203,7 +194,6 @@ function* subsetsGenerator(
 
   yield* backtrack(0);
 
-  // Final state
   yield {
     description: `完成！共生成 ${result.length} 个子集`,
     codeLine: 0,
@@ -215,17 +205,25 @@ function* subsetsGenerator(
   };
 }
 
-export function executeSubsets(input: SubsetsInput): AnimationSnapshot[] {
-  return generatorToSnapshots(subsetsGenerator(input.nums));
+export function executeSubsets(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(subsetsInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        elements: [],
+        elementStates: new Map(),
+        pointers: [],
+      },
+    }];
+  }
+  return generatorToSnapshots(subsetsGenerator(validation.data.nums));
 }
 
-export function getSubsetsDefaultInput(): SubsetsInput {
+export function getSubsetsDefaultInput() {
   return { nums: [1, 2, 3] };
-}
-
-// Letter Combinations of Phone Number (LeetCode 17)
-interface LetterCombinationsInput {
-  digits: string;
 }
 
 const phoneMap: Record<string, string> = {
@@ -258,7 +256,6 @@ function* letterCombinationsGenerator(
   const result: string[] = [];
   const path: string[] = [];
 
-  // Initial state
   const digitNums = digits.split('').map(d => parseInt(d));
   yield {
     description: `开始生成字母组合，输入: ${digits}`,
@@ -272,7 +269,6 @@ function* letterCombinationsGenerator(
 
   function* backtrack(index: number): Generator<Omit<AnimationSnapshot, 'step'>> {
     if (index === digits.length) {
-      // Found a combination
       result.push(path.join(''));
 
       const combStates = new Map<number, ElementState>();
@@ -296,7 +292,6 @@ function* letterCombinationsGenerator(
     const letters = phoneMap[digit] || '';
 
     for (const letter of letters) {
-      // Show current letter being considered
       const considerStates = new Map<number, ElementState>();
       for (let i = 0; i < index; i++) {
         considerStates.set(i, 'sorted');
@@ -313,19 +308,16 @@ function* letterCombinationsGenerator(
         } as ArraySnapshot,
       };
 
-      // Make choice
       path.push(letter);
 
       yield* backtrack(index + 1);
 
-      // Undo choice
       path.pop();
     }
   }
 
   yield* backtrack(0);
 
-  // Final state
   const finalStates = new Map<number, ElementState>();
   for (let i = 0; i < digits.length; i++) {
     finalStates.set(i, 'sorted');
@@ -342,10 +334,23 @@ function* letterCombinationsGenerator(
   };
 }
 
-export function executeLetterCombinations(input: LetterCombinationsInput): AnimationSnapshot[] {
-  return generatorToSnapshots(letterCombinationsGenerator(input.digits));
+export function executeLetterCombinations(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(letterCombinationsInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        elements: [],
+        elementStates: new Map(),
+        pointers: [],
+      },
+    }];
+  }
+  return generatorToSnapshots(letterCombinationsGenerator(validation.data.digits));
 }
 
-export function getLetterCombinationsDefaultInput(): LetterCombinationsInput {
+export function getLetterCombinationsDefaultInput() {
   return { digits: '23' };
 }

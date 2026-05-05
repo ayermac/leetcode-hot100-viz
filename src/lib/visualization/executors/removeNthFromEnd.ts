@@ -1,10 +1,6 @@
 import { AnimationSnapshot, ElementState, LinkedListSnapshot, createLinkedListFromValues, createNormalNodeStates } from '../types';
 import { generatorToSnapshots } from './utils';
-
-interface RemoveNthFromEndInput {
-  values: number[];
-  n: number;  // Remove the nth node from the end (1-indexed)
-}
+import { removeNthFromEndInputSchema, validateInput } from './validation';
 
 function* removeNthFromEndGenerator(
   values: number[],
@@ -53,9 +49,8 @@ function* removeNthFromEndGenerator(
   }
 
   // Use dummy node technique
-  // fast and slow pointers, fast moves n steps first
   let fastIndex = 0;
-  let slowIndex = -1; // -1 represents dummy node (before head)
+  let slowIndex = -1;
 
   yield {
     description: '使用快慢指针技巧: 快指针先走 n 步',
@@ -65,7 +60,7 @@ function* removeNthFromEndGenerator(
       nodeStates: createNormalNodeStates(nodes.length),
       pointers: [
         { name: 'fast', index: fastIndex },
-        { name: 'slow', index: 0 }, // Show slow at head initially
+        { name: 'slow', index: 0 },
       ],
       cycleEntryIndex: null,
     } as LinkedListSnapshot,
@@ -97,8 +92,8 @@ function* removeNthFromEndGenerator(
   }
 
   // Now move both pointers until fast reaches the end
-  slowIndex = 0; // slow starts at head
-  let prevSlowIndex = -1; // Track the node before slow (for deletion)
+  slowIndex = 0;
+  let prevSlowIndex = -1;
 
   yield {
     description: '快慢指针同时前进，直到快指针到达末尾',
@@ -139,7 +134,6 @@ function* removeNthFromEndGenerator(
   }
 
   // slow is now at the nth node from end
-  // Need to remove slow by updating prevSlow's next pointer
   const deleteStates = new Map<number, ElementState>();
   deleteStates.set(slowIndex, 'swapping');
 
@@ -161,15 +155,13 @@ function* removeNthFromEndGenerator(
   const removedNodeNext = nodes[slowIndex].nextIndex;
 
   if (prevSlowIndex === -1) {
-    // Removing head node - update all nodes' indices
-    // For visualization, we mark the head as removed
+    // Removing head node
     const finalStates = new Map<number, ElementState>();
     finalStates.set(0, 'swapping');
     for (let i = 1; i < nodes.length; i++) {
       finalStates.set(i, 'sorted');
     }
 
-    // Create new nodes array without the removed node
     const newNodes = nodes.slice(1).map((node, idx) => ({
       value: node.value,
       nextIndex: node.nextIndex !== null ? idx + 1 : null,
@@ -192,13 +184,12 @@ function* removeNthFromEndGenerator(
     const finalStates = new Map<number, ElementState>();
     for (let i = 0; i < nodes.length; i++) {
       if (i === slowIndex) {
-        finalStates.set(i, 'swapping'); // Mark as removed
+        finalStates.set(i, 'swapping');
       } else {
         finalStates.set(i, 'sorted');
       }
     }
 
-    // Create new nodes array without the removed node
     const newNodes: typeof nodes = [];
     for (let i = 0; i < nodes.length; i++) {
       if (i === slowIndex) continue;
@@ -228,11 +219,26 @@ function* removeNthFromEndGenerator(
   }
 }
 
-export function executeRemoveNthFromEnd(input: RemoveNthFromEndInput): AnimationSnapshot[] {
-  return generatorToSnapshots(removeNthFromEndGenerator(input.values, input.n));
+export function executeRemoveNthFromEnd(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(removeNthFromEndInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        nodes: [],
+        nodeStates: new Map(),
+        pointers: [],
+        cycleEntryIndex: null,
+      },
+    }];
+  }
+  const { values, n } = validation.data;
+  return generatorToSnapshots(removeNthFromEndGenerator(values, n));
 }
 
-export function getRemoveNthFromEndDefaultInput(): RemoveNthFromEndInput {
+export function getRemoveNthFromEndDefaultInput() {
   return {
     values: [1, 2, 3, 4, 5],
     n: 2,

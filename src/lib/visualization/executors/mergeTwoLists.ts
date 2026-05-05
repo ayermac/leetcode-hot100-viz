@@ -1,10 +1,6 @@
 import { AnimationSnapshot, ElementState, LinkedListSnapshot } from '../types';
 import { generatorToSnapshots } from './utils';
-
-interface MergeTwoListsInput {
-  list1: number[];
-  list2: number[];
-}
+import { mergeTwoListsInputSchema, validateInput } from './validation';
 
 interface VirtualNode {
   value: number;
@@ -223,11 +219,26 @@ function createNormalNodeStates(count: number): Map<number, ElementState> {
   return states;
 }
 
-export function executeMergeTwoLists(input: MergeTwoListsInput): AnimationSnapshot[] {
-  return generatorToSnapshots(mergeTwoListsGenerator(input.list1, input.list2));
+export function executeMergeTwoLists(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(mergeTwoListsInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        nodes: [],
+        nodeStates: new Map(),
+        pointers: [],
+        cycleEntryIndex: null,
+      },
+    }];
+  }
+  const { list1, list2 } = validation.data;
+  return generatorToSnapshots(mergeTwoListsGenerator(list1, list2));
 }
 
-export function getMergeTwoListsDefaultInput(): MergeTwoListsInput {
+export function getMergeTwoListsDefaultInput() {
   return {
     list1: [1, 2, 4],
     list2: [1, 3, 4],

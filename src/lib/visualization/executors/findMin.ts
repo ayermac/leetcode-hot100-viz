@@ -1,9 +1,6 @@
 import { AnimationSnapshot, ElementState, Pointer } from '../types';
 import { createNormalStates, generatorToSnapshots } from './utils';
-
-interface FindMinInput {
-  nums: number[];
-}
+import { findMinInputSchema, validateInput } from './validation';
 
 function* findMinGenerator(
   nums: number[]
@@ -169,11 +166,24 @@ function* findMinGenerator(
   };
 }
 
-export function executeFindMin(input: FindMinInput): AnimationSnapshot[] {
-  return generatorToSnapshots(findMinGenerator(input.nums));
+export function executeFindMin(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(findMinInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        elements: [],
+        elementStates: new Map(),
+        pointers: [],
+      },
+    }];
+  }
+  return generatorToSnapshots(findMinGenerator(validation.data.nums));
 }
 
-export function getFindMinDefaultInput(): FindMinInput {
+export function getFindMinDefaultInput() {
   return {
     nums: [4, 5, 6, 7, 0, 1, 2],
   };

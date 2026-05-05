@@ -1,9 +1,6 @@
 import { AnimationSnapshot, ElementState, LinkedListSnapshot, createLinkedListFromValues, createNormalNodeStates } from '../types';
 import { generatorToSnapshots } from './utils';
-
-interface HasCycleInput {
-  values: number[];  // Last value indicates cycle entry if matches earlier value per D-10
-}
+import { hasCycleInputSchema, validateInput } from './validation';
 
 function* hasCycleGenerator(
   values: number[]
@@ -128,10 +125,24 @@ function* hasCycleGenerator(
   };
 }
 
-export function executeHasCycle(input: HasCycleInput): AnimationSnapshot[] {
-  return generatorToSnapshots(hasCycleGenerator(input.values));
+export function executeHasCycle(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(hasCycleInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        nodes: [],
+        nodeStates: new Map(),
+        pointers: [],
+        cycleEntryIndex: null,
+      },
+    }];
+  }
+  return generatorToSnapshots(hasCycleGenerator(validation.data.values));
 }
 
-export function getHasCycleDefaultInput(): HasCycleInput {
+export function getHasCycleDefaultInput() {
   return { values: [3, 2, 0, 4, 2] };  // Last 2 indicates cycle entry at node with value 2
 }

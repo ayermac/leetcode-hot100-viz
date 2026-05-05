@@ -1,9 +1,6 @@
 import { AnimationSnapshot, ElementState, Pointer, LinkedListSnapshot, createLinkedListFromValues, createNormalNodeStates } from '../types';
 import { generatorToSnapshots } from './utils';
-
-interface ReverseListInput {
-  values: number[];
-}
+import { reverseListInputSchema, validateInput } from './validation';
 
 function* reverseListGenerator(
   values: number[]
@@ -104,10 +101,24 @@ function* reverseListGenerator(
   };
 }
 
-export function executeReverseList(input: ReverseListInput): AnimationSnapshot[] {
-  return generatorToSnapshots(reverseListGenerator(input.values));
+export function executeReverseList(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(reverseListInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        nodes: [],
+        nodeStates: new Map(),
+        pointers: [],
+        cycleEntryIndex: null,
+      },
+    }];
+  }
+  return generatorToSnapshots(reverseListGenerator(validation.data.values));
 }
 
-export function getReverseListDefaultInput(): ReverseListInput {
+export function getReverseListDefaultInput() {
   return { values: [1, 2, 3, 4, 5] };
 }

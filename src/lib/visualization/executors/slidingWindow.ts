@@ -1,9 +1,6 @@
 import { AnimationSnapshot, ElementState, Pointer } from '../types';
 import { createNormalStates, generatorToSnapshots } from './utils';
-
-interface LengthOfLongestSubstringInput {
-  s: string;
-}
+import { lengthOfLongestSubstringInputSchema, minWindowInputSchema, validateInput } from './validation';
 
 function* lengthOfLongestSubstringGenerator(
   s: string
@@ -14,7 +11,6 @@ function* lengthOfLongestSubstringGenerator(
   let maxLength = 0;
   let maxStart = 0;
 
-  // Initial state
   yield {
     description: `开始在字符串 "${s}" 中查找无重复字符的最长子串`,
     codeLine: 1,
@@ -31,7 +27,6 @@ function* lengthOfLongestSubstringGenerator(
   for (let right = 0; right < s.length; right++) {
     const currentChar = s[right];
 
-    // Show current character being examined
     const examineStates = new Map<number, ElementState>();
     examineStates.set(right, 'comparing');
     for (let i = left; i < right; i++) {
@@ -51,11 +46,9 @@ function* lengthOfLongestSubstringGenerator(
       },
     };
 
-    // If character is in set, shrink window from left
     while (charSet.has(currentChar)) {
       const leftChar = s[left];
 
-      // Show character being removed
       const removeStates = new Map<number, ElementState>();
       removeStates.set(left, 'swapping');
       removeStates.set(right, 'comparing');
@@ -80,10 +73,8 @@ function* lengthOfLongestSubstringGenerator(
       left++;
     }
 
-    // Add current character to set
     charSet.add(currentChar);
 
-    // Show window after adding
     const addStates = new Map<number, ElementState>();
     for (let i = left; i <= right; i++) {
       addStates.set(i, 'highlighted');
@@ -94,7 +85,6 @@ function* lengthOfLongestSubstringGenerator(
       maxLength = currentLength;
       maxStart = left;
 
-      // Show new maximum found
       const maxStates = new Map<number, ElementState>();
       for (let i = left; i <= right; i++) {
         maxStates.set(i, 'sorted');
@@ -128,7 +118,6 @@ function* lengthOfLongestSubstringGenerator(
     }
   }
 
-  // Final state
   const finalStates = new Map<number, ElementState>();
   for (let i = maxStart; i < maxStart + maxLength; i++) {
     finalStates.set(i, 'sorted');
@@ -148,20 +137,27 @@ function* lengthOfLongestSubstringGenerator(
   };
 }
 
-export function executeLengthOfLongestSubstring(input: LengthOfLongestSubstringInput): AnimationSnapshot[] {
-  return generatorToSnapshots(lengthOfLongestSubstringGenerator(input.s));
+export function executeLengthOfLongestSubstring(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(lengthOfLongestSubstringInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        elements: [],
+        elementStates: new Map(),
+        pointers: [],
+      },
+    }];
+  }
+  return generatorToSnapshots(lengthOfLongestSubstringGenerator(validation.data.s));
 }
 
-export function getLengthOfLongestSubstringDefaultInput(): LengthOfLongestSubstringInput {
+export function getLengthOfLongestSubstringDefaultInput() {
   return {
     s: 'abcabcbb',
   };
-}
-
-// Min Window Substring (LeetCode 76) - Another classic sliding window problem
-interface MinWindowInput {
-  s: string;
-  t: string;
 }
 
 function* minWindowGenerator(
@@ -183,7 +179,6 @@ function* minWindowGenerator(
 
   const charArray = s.split('');
 
-  // Build target frequency map
   const targetFreq = new Map<string, number>();
   for (const char of t) {
     targetFreq.set(char, (targetFreq.get(char) || 0) + 1);
@@ -191,11 +186,10 @@ function* minWindowGenerator(
 
   const windowFreq = new Map<string, number>();
   let left = 0;
-  let validCount = 0; // Number of characters with satisfied frequency
+  let validCount = 0;
   let minLen = Infinity;
   let minStart = -1;
 
-  // Initial state
   yield {
     description: `开始在 "${s}" 中查找包含 "${t}" 所有字符的最小窗口`,
     codeLine: 1,
@@ -212,7 +206,6 @@ function* minWindowGenerator(
   for (let right = 0; right < s.length; right++) {
     const char = s[right];
 
-    // Expand window - add right character
     if (targetFreq.has(char)) {
       windowFreq.set(char, (windowFreq.get(char) || 0) + 1);
       if (windowFreq.get(char) === targetFreq.get(char)) {
@@ -220,7 +213,6 @@ function* minWindowGenerator(
       }
     }
 
-    // Show expansion
     const expandStates = new Map<number, ElementState>();
     expandStates.set(right, 'comparing');
     for (let i = left; i < right; i++) {
@@ -242,7 +234,6 @@ function* minWindowGenerator(
       },
     };
 
-    // Shrink window while valid
     while (validCount === targetFreq.size && left <= right) {
       const currentLen = right - left + 1;
 
@@ -250,7 +241,6 @@ function* minWindowGenerator(
         minLen = currentLen;
         minStart = left;
 
-        // Show new minimum window
         const minStates = new Map<number, ElementState>();
         for (let i = left; i <= right; i++) {
           minStates.set(i, 'sorted');
@@ -270,7 +260,6 @@ function* minWindowGenerator(
         };
       }
 
-      // Remove left character
       const leftChar = s[left];
       if (targetFreq.has(leftChar)) {
         if (windowFreq.get(leftChar) === targetFreq.get(leftChar)) {
@@ -280,7 +269,6 @@ function* minWindowGenerator(
       }
       left++;
 
-      // Show shrinkage
       const shrinkStates = new Map<number, ElementState>();
       shrinkStates.set(left - 1, 'swapping');
       for (let i = left; i <= right; i++) {
@@ -304,7 +292,6 @@ function* minWindowGenerator(
     }
   }
 
-  // Final state
   if (minStart === -1) {
     yield {
       description: `未找到包含所有字符的窗口`,
@@ -336,11 +323,25 @@ function* minWindowGenerator(
   }
 }
 
-export function executeMinWindow(input: MinWindowInput): AnimationSnapshot[] {
-  return generatorToSnapshots(minWindowGenerator(input.s, input.t));
+export function executeMinWindow(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(minWindowInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        elements: [],
+        elementStates: new Map(),
+        pointers: [],
+      },
+    }];
+  }
+  const { s, t } = validation.data;
+  return generatorToSnapshots(minWindowGenerator(s, t));
 }
 
-export function getMinWindowDefaultInput(): MinWindowInput {
+export function getMinWindowDefaultInput() {
   return {
     s: 'ADOBECODEBANC',
     t: 'ABC',

@@ -1,9 +1,6 @@
 import { AnimationSnapshot, ElementState, Pointer } from '../types';
 import { createNormalStates, generatorToSnapshots } from './utils';
-
-interface MaxSubArrayInput {
-  nums: number[];
-}
+import { maxSubArrayInputSchema, validateInput } from './validation';
 
 function* maxSubArrayGenerator(
   nums: number[]
@@ -147,11 +144,24 @@ function* maxSubArrayGenerator(
   };
 }
 
-export function executeMaxSubArray(input: MaxSubArrayInput): AnimationSnapshot[] {
-  return generatorToSnapshots(maxSubArrayGenerator(input.nums));
+export function executeMaxSubArray(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(maxSubArrayInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        elements: [],
+        elementStates: new Map(),
+        pointers: [],
+      },
+    }];
+  }
+  return generatorToSnapshots(maxSubArrayGenerator(validation.data.nums));
 }
 
-export function getMaxSubArrayDefaultInput(): MaxSubArrayInput {
+export function getMaxSubArrayDefaultInput() {
   return {
     nums: [-2, 1, -3, 4, -1, 2, 1, -5, 4],
   };

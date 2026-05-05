@@ -1,17 +1,13 @@
 import { AnimationSnapshot, TreeNodeRef, BinaryTreeSnapshot, ElementState } from '../types';
 import { generatorToSnapshots } from './utils';
+import { inorderTraversalInputSchema, validateInput } from './validation';
 
-interface InorderTraversalInput {
-  values: (number | null)[];  // Array representation of binary tree (null for missing nodes)
-}
-
-// Build tree nodes from array representation
 function buildTreeNodes(values: (number | null)[]): TreeNodeRef[] {
   const nodes: TreeNodeRef[] = [];
 
   for (let i = 0; i < values.length; i++) {
     if (values[i] === null) {
-      nodes.push({ value: 0, leftIndex: null, rightIndex: null }); // Placeholder
+      nodes.push({ value: 0, leftIndex: null, rightIndex: null });
       continue;
     }
 
@@ -34,7 +30,6 @@ function* inorderTraversalGenerator(
   const nodes = buildTreeNodes(values);
   const validIndices = values.map((v, i) => v !== null ? i : -1).filter(i => i >= 0);
 
-  // Initial state
   yield {
     description: '开始中序遍历（左 → 根 → 右）',
     codeLine: 1,
@@ -54,7 +49,6 @@ function* inorderTraversalGenerator(
       return;
     }
 
-    // Going left
     const newPath = [...path, nodeIndex];
     yield {
       description: `访问节点 ${nodes[nodeIndex].value}，先遍历左子树`,
@@ -67,10 +61,8 @@ function* inorderTraversalGenerator(
       } as BinaryTreeSnapshot,
     };
 
-    // Traverse left
     yield* traverse(nodes[nodeIndex].leftIndex, newPath);
 
-    // Visit node (inorder position)
     visited.add(nodeIndex);
     result.push(nodes[nodeIndex].value);
     yield {
@@ -84,14 +76,11 @@ function* inorderTraversalGenerator(
       } as BinaryTreeSnapshot,
     };
 
-    // Traverse right
     yield* traverse(nodes[nodeIndex].rightIndex, newPath);
   }
 
-  // Start from root (index 0)
   yield* traverse(0, []);
 
-  // Final state
   const finalStates = new Map<number, ElementState>();
   validIndices.forEach(i => finalStates.set(i, 'sorted'));
 
@@ -107,12 +96,26 @@ function* inorderTraversalGenerator(
   };
 }
 
-export function executeInorderTraversal(input: InorderTraversalInput): AnimationSnapshot[] {
-  return generatorToSnapshots(inorderTraversalGenerator(input.values));
+export function executeInorderTraversal(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(inorderTraversalInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        nodes: [],
+        nodeStates: new Map(),
+        highlightedPath: [],
+        currentRoot: null,
+      },
+    }];
+  }
+  return generatorToSnapshots(inorderTraversalGenerator(validation.data.values));
 }
 
-export function getInorderTraversalDefaultInput(): InorderTraversalInput {
+export function getInorderTraversalDefaultInput() {
   return {
-    values: [1, 2, 3, 4, 5, 6, 7],  // Complete binary tree
+    values: [1, 2, 3, 4, 5, 6, 7],
   };
 }
