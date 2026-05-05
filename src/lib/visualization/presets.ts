@@ -1,3 +1,5 @@
+import { ProblemId, PROBLEM_IDS } from '@/lib/constants/problems';
+
 interface PresetCase {
   label: string;
   value: string;
@@ -10,9 +12,9 @@ interface ProblemPresets {
   placeholder: string;
 }
 
-export const problemPresets: Record<string, ProblemPresets> = {
-  // Array algorithms (existing)
-  '0001': {
+export const problemPresets: Record<ProblemId, ProblemPresets> = {
+  // Array algorithms
+  [PROBLEM_IDS.TWO_SUM]: {
     inputType: 'array',
     defaultValue: '2, 7, 11, 15',
     presets: [
@@ -22,7 +24,7 @@ export const problemPresets: Record<string, ProblemPresets> = {
     ],
     placeholder: '输入数组元素，逗号分隔',
   },
-  '0283': {
+  [PROBLEM_IDS.MOVE_ZEROES]: {
     inputType: 'array',
     defaultValue: '0, 1, 0, 3, 12',
     presets: [
@@ -32,7 +34,7 @@ export const problemPresets: Record<string, ProblemPresets> = {
     ],
     placeholder: '输入数组元素，逗号分隔',
   },
-  '0011': {
+  [PROBLEM_IDS.CONTAINER_WITH_WATER]: {
     inputType: 'array',
     defaultValue: '1, 8, 6, 2, 5, 4, 8, 3, 7',
     presets: [
@@ -42,7 +44,7 @@ export const problemPresets: Record<string, ProblemPresets> = {
     ],
     placeholder: '输入数组元素，逗号分隔',
   },
-  '0015': {
+  [PROBLEM_IDS.THREE_SUM]: {
     inputType: 'array',
     defaultValue: '-1, 0, 1, 2, -1, -4',
     presets: [
@@ -52,7 +54,9 @@ export const problemPresets: Record<string, ProblemPresets> = {
     ],
     placeholder: '输入数组元素，逗号分隔',
   },
-  '0153': {
+
+  // Binary search
+  [PROBLEM_IDS.FIND_MIN]: {
     inputType: 'array',
     defaultValue: '4, 5, 6, 7, 0, 1, 2',
     presets: [
@@ -63,9 +67,7 @@ export const problemPresets: Record<string, ProblemPresets> = {
     ],
     placeholder: '输入旋转数组元素，逗号分隔',
   },
-
-  // Binary Search - Search Insert Position (0035)
-  '0035': {
+  [PROBLEM_IDS.SEARCH_INSERT]: {
     inputType: 'array',
     defaultValue: '1, 3, 5, 6;target=5',
     presets: [
@@ -77,8 +79,8 @@ export const problemPresets: Record<string, ProblemPresets> = {
     placeholder: '输入有序数组;target=目标值',
   },
 
-  // Dynamic Programming - Maximum Subarray (0053)
-  '0053': {
+  // Dynamic programming
+  [PROBLEM_IDS.MAX_SUBARRAY]: {
     inputType: 'array',
     defaultValue: '-2, 1, -3, 4, -1, 2, 1, -5, 4',
     presets: [
@@ -90,8 +92,8 @@ export const problemPresets: Record<string, ProblemPresets> = {
     placeholder: '输入整数数组，逗号分隔',
   },
 
-  // Linked list algorithms (new) per D-13
-  '0206': {
+  // Linked list algorithms
+  [PROBLEM_IDS.REVERSE_LIST]: {
     inputType: 'linkedlist',
     defaultValue: '1, 2, 3, 4, 5',
     presets: [
@@ -101,7 +103,7 @@ export const problemPresets: Record<string, ProblemPresets> = {
     ],
     placeholder: '输入链表节点值，逗号分隔',
   },
-  '0141': {
+  [PROBLEM_IDS.HAS_CYCLE]: {
     inputType: 'linkedlist',
     defaultValue: '3, 2, 0, 4, 2',
     presets: [
@@ -112,7 +114,7 @@ export const problemPresets: Record<string, ProblemPresets> = {
     ],
     placeholder: '输入链表节点值，最后一个值表示环入口',
   },
-  '0021': {
+  [PROBLEM_IDS.MERGE_TWO_LISTS]: {
     inputType: 'twoArrays',
     defaultValue: '1, 2, 4|1, 3, 4',
     presets: [
@@ -122,7 +124,7 @@ export const problemPresets: Record<string, ProblemPresets> = {
     ],
     placeholder: '输入两个数组，用 | 分隔',
   },
-  '0019': {
+  [PROBLEM_IDS.REMOVE_NTH_FROM_END]: {
     inputType: 'arrayWithN',
     defaultValue: '1, 2, 3, 4, 5;n=2',
     presets: [
@@ -135,7 +137,7 @@ export const problemPresets: Record<string, ProblemPresets> = {
 };
 
 export function getProblemPresets(problemId: string): ProblemPresets | undefined {
-  return problemPresets[problemId];
+  return problemPresets[problemId as ProblemId];
 }
 
 export type { PresetCase, ProblemPresets };

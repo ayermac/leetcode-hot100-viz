@@ -2,20 +2,9 @@
 
 import { useMemo, useState } from 'react';
 import { AlgorithmPlayer, CustomInputPanel } from '@/components/visualization';
-import {
-  executeTwoSum,
-  executeMoveZeroes,
-  executeContainerWithWater,
-  executeThreeSum,
-  executeFindMin,
-  executeSearchInsert,
-  executeMaxSubArray,
-  executeReverseList,
-  executeHasCycle,
-  executeMergeTwoLists,
-  executeRemoveNthFromEnd,
-  getProblemPresets,
-} from '@/lib/visualization';
+import { getProblemPresets } from '@/lib/visualization';
+import { isVisualizationSupported } from '@/lib/constants/problems';
+import { getExecutor } from '@/lib/visualization/executors/registry';
 
 interface VisualizationSectionProps {
   problemId: string;
@@ -49,48 +38,37 @@ function parseTwoArraysInput(input: string): { list1: number[]; list2: number[] 
   };
 }
 
-// Problem IDs that support visualization
-const supportedProblemIds = new Set(['0001', '0283', '0011', '0015', '0153', '0035', '0053', '0206', '0141', '0021', '0019']);
-
-export function isVisualizationSupported(problemId: string): boolean {
-  return supportedProblemIds.has(problemId);
-}
+// Input parsing map for different problem types
+const inputParsers: Record<string, (input: string) => unknown> = {
+  '0001': (input) => ({ nums: parseSimpleArray(input), target: 9 }),
+  '0283': (input) => parseSimpleArray(input),
+  '0011': (input) => parseSimpleArray(input),
+  '0015': (input) => parseSimpleArray(input),
+  '0153': (input) => ({ nums: parseSimpleArray(input) }),
+  '0035': (input) => parseArrayWithTargetInput(input),
+  '0053': (input) => ({ nums: parseSimpleArray(input) }),
+  '0206': (input) => ({ values: parseSimpleArray(input) }),
+  '0141': (input) => ({ values: parseSimpleArray(input) }),
+  '0021': (input) => parseTwoArraysInput(input),
+  '0019': (input) => parseArrayWithNInput(input),
+};
 
 export function VisualizationSection({ problemId, onCodeLineChange }: VisualizationSectionProps) {
   const presets = getProblemPresets(problemId);
   const [customInput, setCustomInput] = useState<string>(presets?.defaultValue ?? '');
 
   const snapshots = useMemo(() => {
-    // Map problem IDs to executors with custom input
-    switch (problemId) {
-      case '0001':
-        return executeTwoSum({ nums: parseSimpleArray(customInput), target: 9 });
-      case '0283':
-        return executeMoveZeroes(parseSimpleArray(customInput));
-      case '0011':
-        return executeContainerWithWater(parseSimpleArray(customInput));
-      case '0015':
-        return executeThreeSum(parseSimpleArray(customInput));
-      case '0153':
-        return executeFindMin({ nums: parseSimpleArray(customInput) });
-      case '0035':
-        return executeSearchInsert(parseArrayWithTargetInput(customInput));
-      case '0053':
-        return executeMaxSubArray({ nums: parseSimpleArray(customInput) });
-      case '0206':
-        return executeReverseList({ values: parseSimpleArray(customInput) });
-      case '0141':
-        return executeHasCycle({ values: parseSimpleArray(customInput) });
-      case '0021':
-        return executeMergeTwoLists(parseTwoArraysInput(customInput));
-      case '0019':
-        return executeRemoveNthFromEnd(parseArrayWithNInput(customInput));
-      default:
-        return [];
+    const executor = getExecutor(problemId);
+    const parser = inputParsers[problemId];
+
+    if (executor && parser) {
+      return executor(parser(customInput));
     }
+
+    return [];
   }, [problemId, customInput]);
 
-  if (!supportedProblemIds.has(problemId)) {
+  if (!isVisualizationSupported(problemId)) {
     return (
       <div className="p-6 text-center text-muted-foreground">
         该题目暂无动画演示

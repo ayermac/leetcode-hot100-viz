@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { useLanguagePreference } from '@/hooks/useLanguagePreference';
 import { Problem } from '@/lib/data/types';
 import { CodeViewer } from '@/components/CodeViewer';
-import { VisualizationSection, isVisualizationSupported } from '@/components/VisualizationSection';
+import { VisualizationSection } from '@/components/VisualizationSection';
+import { isVisualizationSupported } from '@/lib/constants/problems';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 

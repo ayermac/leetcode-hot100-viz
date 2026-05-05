@@ -41,5 +41,8 @@ export { executeLetterCombinations, getLetterCombinationsDefaultInput } from './
 export { executeFindKthLargest, getFindKthLargestDefaultInput } from './heapAlgorithms';
 export { executeTopKFrequent, getTopKFrequentDefaultInput } from './heapAlgorithms';
 
+// Registry
+export { executorRegistry, getExecutor, hasExecutor } from './registry';
+
 // Utilities
 export { generatorToSnapshots, createNormalStates } from './utils';

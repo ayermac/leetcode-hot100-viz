@@ -3,6 +3,7 @@ import { renderMarkdown } from '@/lib/mdx';
 import { ProblemHeader } from '@/components/ProblemHeader';
 import { ProblemPageClient } from './ProblemPageClient';
 import { RichProblemView } from '@/components/RichProblemView';
+import { hasRichContent } from '@/lib/constants/problems';
 import twoSumRichContent from '@/../data/rich/0001.json';
 
 interface ProblemPageProps {
@@ -47,7 +48,7 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
   }
 
   // Use RichProblemView for problems with rich content
-  if (id === '0001') {
+  if (hasRichContent(id)) {
     return (
       <div className="container py-6">
         <ProblemHeader problem={problem} category={category} />

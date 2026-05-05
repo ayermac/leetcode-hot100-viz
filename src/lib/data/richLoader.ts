@@ -1,4 +1,5 @@
 import { RichProblemContent } from './richContentTypes';
+import { hasRichContent as hasRichContentCheck } from '@/lib/constants/problems';
 
 // Cache for rich content
 const contentCache = new Map<string, RichProblemContent>();
@@ -30,7 +31,5 @@ export async function loadRichContent(id: string): Promise<RichProblemContent | 
  * Check if rich content exists for a problem
  */
 export function hasRichContent(id: string): boolean {
-  // For now, we only have 0001
-  // TODO: Scan the data/rich directory to get all available IDs
-  return id === '0001';
+  return hasRichContentCheck(id);
 }
