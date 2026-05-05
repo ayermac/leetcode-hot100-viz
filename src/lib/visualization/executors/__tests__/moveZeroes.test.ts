@@ -11,7 +11,7 @@ describe('moveZeroes executor', () => {
   })
 
   it('should have correct data structure', () => {
-    const snapshots = executeMoveZeroes([0, 1, 0, 3, 12])
+    const snapshots = executeMoveZeroes({ nums: [0, 1, 0, 3, 12] })
 
     snapshots.forEach((snapshot) => {
       expect(snapshot).toHaveProperty('step')
@@ -25,7 +25,7 @@ describe('moveZeroes executor', () => {
   })
 
   it('should move zeros to the end', () => {
-    const snapshots = executeMoveZeroes([0, 1, 0, 3, 12])
+    const snapshots = executeMoveZeroes({ nums: [0, 1, 0, 3, 12] })
     const lastSnapshot = snapshots[snapshots.length - 1]
 
     const elements = lastSnapshot.data.elements as number[]
@@ -38,12 +38,18 @@ describe('moveZeroes executor', () => {
   })
 
   it('should handle array with no zeros', () => {
-    const snapshots = executeMoveZeroes([1, 2, 3])
+    const snapshots = executeMoveZeroes({ nums: [1, 2, 3] })
     expect(snapshots.length).toBeGreaterThan(0)
   })
 
   it('should handle empty array', () => {
-    const snapshots = executeMoveZeroes([])
+    const snapshots = executeMoveZeroes({ nums: [] })
     expect(snapshots.length).toBeGreaterThan(0)
+  })
+
+  it('should return error snapshot for invalid input', () => {
+    const snapshots = executeMoveZeroes({ invalid: 'input' })
+    expect(snapshots.length).toBe(1)
+    expect(snapshots[0].description).toContain('验证失败')
   })
 })
