@@ -140,7 +140,9 @@ export function CustomInputPanel({
 
       {/* Input field per D-09 */}
       <div className="space-y-2">
+        <label htmlFor="custom-input" className="sr-only">自定义输入</label>
         <textarea
+          id="custom-input"
           value={inputValue}
           onChange={(e) => handleInputChange(e.target.value)}
           placeholder={placeholder}

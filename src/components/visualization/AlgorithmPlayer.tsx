@@ -99,7 +99,7 @@ export function AlgorithmPlayer({ snapshots, autoLoad = true, onCodeLineChange }
     <div className="flex flex-col gap-4">
       {/* Step description */}
       {currentSnapshot && (
-        <div className="p-3 bg-muted rounded-lg">
+        <div className="p-3 bg-muted rounded-lg" aria-live="polite" aria-atomic="true">
           <p className="text-sm">
             <span className="font-medium text-muted-foreground mr-2">
               步骤 {currentIndex + 1}:

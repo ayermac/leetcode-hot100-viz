@@ -36,6 +36,8 @@ export function Header() {
             className="sm:hidden text-muted-foreground hover:text-foreground hover:bg-accent"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="切换菜单"
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
@@ -43,7 +45,7 @@ export function Header() {
       </div>
 
       {mobileMenuOpen && (
-        <div className="sm:hidden border-t border-border bg-background">
+        <div id="mobile-menu" className="sm:hidden border-t border-border bg-background">
           <nav className="container py-4 flex flex-col space-y-2">
             <MobileNavLink href="/" onClick={() => setMobileMenuOpen(false)}>首页</MobileNavLink>
             <MobileNavLink href="/categories" onClick={() => setMobileMenuOpen(false)}>分类</MobileNavLink>

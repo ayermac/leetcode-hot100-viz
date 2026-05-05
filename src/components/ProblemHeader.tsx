@@ -25,9 +25,11 @@ export function ProblemHeader({ problem, category }: ProblemHeaderProps) {
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-1 text-sm text-primary hover:underline"
+          aria-label="在 LeetCode 打开（新标签页）"
         >
           <ExternalLink className="h-4 w-4" />
           LeetCode
+          <span className="sr-only">（新标签页）</span>
         </a>
       </div>
       <div className="flex items-center gap-4 mt-2">

@@ -48,6 +48,7 @@ export function PlaybackControls({
             onClick={onReset}
             disabled={currentIndex === 0}
             title="重置"
+            aria-label="重置动画"
           >
             <RotateCcw className="h-4 w-4" />
           </Button>
@@ -58,6 +59,7 @@ export function PlaybackControls({
             onClick={onStepBackward}
             disabled={!canStepBackward}
             title="上一步"
+            aria-label="上一步"
           >
             <SkipBack className="h-4 w-4" />
           </Button>
@@ -68,6 +70,7 @@ export function PlaybackControls({
             onClick={isPlaying ? onPause : onPlay}
             disabled={totalSteps === 0 || (isPlaying && !canStepForward)}
             title={isPlaying ? '暂停' : '播放'}
+            aria-label={isPlaying ? '暂停动画' : '播放动画'}
             className="w-10 h-10"
           >
             {isPlaying ? (
@@ -83,6 +86,7 @@ export function PlaybackControls({
             onClick={onStepForward}
             disabled={!canStepForward}
             title="下一步"
+            aria-label="下一步"
           >
             <SkipForward className="h-4 w-4" />
           </Button>

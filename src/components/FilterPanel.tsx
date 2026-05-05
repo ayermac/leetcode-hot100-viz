@@ -54,7 +54,9 @@ export function FilterPanel({
       </div>
 
       {/* Category Filter */}
+      <label htmlFor="category-filter" className="sr-only">分类筛选</label>
       <select
+        id="category-filter"
         value={filter.categoryId}
         onChange={(e) => setFilter({ categoryId: e.target.value })}
         className="h-7 px-2 text-xs rounded-md border bg-background"

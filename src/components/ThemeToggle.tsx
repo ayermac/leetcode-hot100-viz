@@ -29,6 +29,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
         onClick={() => setTheme('light')}
         className="h-8 w-8"
         title="亮色模式"
+        aria-pressed={theme === 'light'}
       >
         <Sun className="h-4 w-4" />
       </Button>
@@ -38,6 +39,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
         onClick={() => setTheme('dark')}
         className="h-8 w-8"
         title="暗色模式"
+        aria-pressed={theme === 'dark'}
       >
         <Moon className="h-4 w-4" />
       </Button>
@@ -47,6 +49,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
         onClick={() => setTheme('system')}
         className="h-8 w-8"
         title="跟随系统"
+        aria-pressed={theme === 'system'}
       >
         <Monitor className="h-4 w-4" />
       </Button>

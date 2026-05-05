@@ -130,6 +130,7 @@ const SolutionStep = ({ step, title, description, isExpanded, onToggle }: Soluti
   >
     <button
       onClick={onToggle}
+      aria-expanded={isExpanded}
       className="w-full flex items-start gap-4 p-4 rounded-xl bg-muted/50 border border-border hover:border-violet-300 dark:hover:border-violet-600 transition-colors text-left"
     >
       <StepNumber number={step} active={isExpanded} />
@@ -294,6 +295,7 @@ const SolutionMethodCard = ({
               <button
                 key={idx}
                 onClick={() => onSolutionChange(idx)}
+                aria-pressed={activeSolution === idx}
                 className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${activeSolution === idx ? 'bg-violet-600 text-white shadow-lg shadow-violet-200 dark:shadow-violet-800' : 'bg-muted text-muted-foreground hover:bg-muted/70 hover:text-foreground'}`}
               >
                 <span className="mr-2">{solution.icon}</span>
@@ -380,7 +382,7 @@ const ComparisonTable = ({ headers, rows }: ComparisonTableProps) => (
           <thead>
             <tr className="border-b border-border">
               {headers.map((header, idx) => (
-                <th key={idx} className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
+                <th key={idx} scope="col" className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
                   {header}
                 </th>
               ))}

@@ -34,6 +34,7 @@ export function SearchBar({ value, onChange, placeholder = '搜索题目...', cl
           size="icon-sm"
           onClick={() => onChange('')}
           className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6"
+          aria-label="清除搜索"
         >
           <X className="h-3 w-3" />
         </Button>

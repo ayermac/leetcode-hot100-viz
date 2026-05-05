@@ -38,7 +38,7 @@ export function ArrayVisualizer({ snapshot, className }: ArrayVisualizerProps) {
   );
 
   return (
-    <div className={cn('py-10 px-4', className)}>
+    <div className={cn('py-10 px-4', className)} role="img" aria-label={`数组可视化，包含 ${elements.length} 个元素`}>
       {/* Pointers */}
       <div className="relative h-10">
         {pointers.map((pointer) => {
