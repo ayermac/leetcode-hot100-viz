@@ -1,5 +1,6 @@
 import { AnimationSnapshot, ElementState } from '../types';
 import { createNormalStates, generatorToSnapshots } from './utils';
+import { threeSumInputSchema, validateInput } from './validation';
 
 function* threeSumGenerator(
   nums: number[]
@@ -120,10 +121,23 @@ function* threeSumGenerator(
   };
 }
 
-export function executeThreeSum(nums: number[]): AnimationSnapshot[] {
-  return generatorToSnapshots(threeSumGenerator(nums));
+export function executeThreeSum(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(threeSumInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        elements: [],
+        elementStates: new Map(),
+        pointers: [],
+      },
+    }];
+  }
+  return generatorToSnapshots(threeSumGenerator(validation.data.nums));
 }
 
-export function getThreeSumDefaultInput(): number[] {
-  return [-1, 0, 1, 2, -1, -4];
+export function getThreeSumDefaultInput(): { nums: number[] } {
+  return { nums: [-1, 0, 1, 2, -1, -4] };
 }

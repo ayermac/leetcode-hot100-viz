@@ -1,5 +1,6 @@
 import { AnimationSnapshot, ElementState } from '../types';
 import { createNormalStates, generatorToSnapshots } from './utils';
+import { containerWithWaterInputSchema, validateInput } from './validation';
 
 function* containerWithWaterGenerator(
   height: number[]
@@ -72,10 +73,23 @@ function* containerWithWaterGenerator(
   };
 }
 
-export function executeContainerWithWater(height: number[]): AnimationSnapshot[] {
-  return generatorToSnapshots(containerWithWaterGenerator(height));
+export function executeContainerWithWater(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(containerWithWaterInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        elements: [],
+        elementStates: new Map(),
+        pointers: [],
+      },
+    }];
+  }
+  return generatorToSnapshots(containerWithWaterGenerator(validation.data.height));
 }
 
-export function getContainerWithWaterDefaultInput(): number[] {
-  return [1, 8, 6, 2, 5, 4, 8, 3, 7];
+export function getContainerWithWaterDefaultInput(): { height: number[] } {
+  return { height: [1, 8, 6, 2, 5, 4, 8, 3, 7] };
 }

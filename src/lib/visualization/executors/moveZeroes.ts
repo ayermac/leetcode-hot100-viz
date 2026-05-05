@@ -1,5 +1,6 @@
 import { AnimationSnapshot, ElementState } from '../types';
 import { createNormalStates, generatorToSnapshots } from './utils';
+import { moveZeroesInputSchema, validateInput } from './validation';
 
 function* moveZeroesGenerator(
   nums: number[]
@@ -82,10 +83,23 @@ function* moveZeroesGenerator(
   };
 }
 
-export function executeMoveZeroes(nums: number[]): AnimationSnapshot[] {
-  return generatorToSnapshots(moveZeroesGenerator(nums));
+export function executeMoveZeroes(input: unknown): AnimationSnapshot[] {
+  const validation = validateInput(moveZeroesInputSchema, input);
+  if (!validation.success) {
+    return [{
+      step: 0,
+      description: `输入验证失败: ${validation.error}`,
+      codeLine: 0,
+      data: {
+        elements: [],
+        elementStates: new Map(),
+        pointers: [],
+      },
+    }];
+  }
+  return generatorToSnapshots(moveZeroesGenerator(validation.data.nums));
 }
 
-export function getMoveZeroesDefaultInput(): number[] {
-  return [0, 1, 0, 3, 12];
+export function getMoveZeroesDefaultInput(): { nums: number[] } {
+  return { nums: [0, 1, 0, 3, 12] };
 }
